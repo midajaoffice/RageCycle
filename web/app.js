@@ -102,7 +102,7 @@ function tableFromRows(rows, colMap, rowFilter) {
 function statusBadge(status) {
   const s = (status || "").toLowerCase();
   let cls = "badge-default";
-  if (s.includes("position")) cls = "badge-position";
+  if (s.includes("position") || s === "offen") cls = "badge-position";
   else if (s.includes("kaufen")) cls = "badge-kaufen";
   else if (s.includes("beobachten")) cls = "badge-beobachten";
   else if (s.includes("daten")) cls = "badge-daten";
@@ -169,6 +169,68 @@ function fmtEur(n) {
   }).format(num);
 }
 
+/** Parses numbers like "125", "125 EUR", "135,76 USD", "1.234,56" from table cells. */
+function parseMoneyCell(s) {
+  if (s == null || s === "—") return NaN;
+  let t = String(s).trim().replace(/\s*(EUR|USD|€)\s*$/i, "").trim();
+  if (/\d,\d/.test(t)) {
+    t = t.replace(/\./g, "").replace(",", ".");
+  } else {
+    t = t.replace(/,/g, "");
+  }
+  const n = parseFloat(t);
+  return Number.isNaN(n) ? NaN : n;
+}
+
+/** Steuersatz aus `gebuehren_modell` (z. B. steuer_modell:26.375pct_DE) — Fallback 26,375 %. */
+function parseSteuerRateFromOv(ov) {
+  const g = (ov && ov.gebuehren_modell) || "";
+  const m = g.match(/steuer_modell:([\d.,]+)pct/i);
+  if (m) {
+    const r = parseFloat(m[1].replace(",", ".")) / 100;
+    if (!Number.isNaN(r) && r > 0 && r < 1) return r;
+  }
+  return 0.26375;
+}
+
+/**
+ * Brutto = aktueller Positionswert (EUR).
+ * Netto schätz. = Verkaufserlös nach pauschaler Abgeltungssteuer nur auf den Gewinn (Freibetrag ignoriert — Orientierung).
+ */
+function bruttoNettoSchätz(bruttoStr, einsatzStr, steuerRate) {
+  const brutto = parseMoneyCell(bruttoStr);
+  const einsatz = parseMoneyCell(einsatzStr);
+  if (Number.isNaN(brutto)) return { brutto: "—", netto: "—" };
+  const gewinn = Number.isNaN(einsatz) ? 0 : Math.max(0, brutto - einsatz);
+  const steuer = gewinn * steuerRate;
+  const netto = brutto - steuer;
+  return {
+    brutto: fmtEur(brutto),
+    netto: Number.isNaN(netto) ? "—" : fmtEur(netto),
+  };
+}
+
+function aggregatePositionsBruttoNetto(rows, steuerRate) {
+  if (!rows || rows.length < 2) return null;
+  const headers = rows[0];
+  const idx = (h, name) => h.indexOf(name);
+  let bruttoSum = 0;
+  let nettoSum = 0;
+  let any = false;
+  for (const row of rows.slice(1)) {
+    const asset = (row[0] || "").toLowerCase();
+    if (asset === "keine" || asset === "fehlt") continue;
+    const brutto = parseMoneyCell(row[idx(headers, "Positionswert")]);
+    const einsatz = parseMoneyCell(row[idx(headers, "Positionsgröße")]);
+    if (Number.isNaN(brutto)) continue;
+    any = true;
+    bruttoSum += brutto;
+    const gewinn = Number.isNaN(einsatz) ? 0 : Math.max(0, brutto - einsatz);
+    nettoSum += brutto - gewinn * steuerRate;
+  }
+  return any ? { bruttoSum, nettoSum } : null;
+}
+
 function renderNorthStar(ns, cap) {
   const pct = parseFloat(ns.progress) || 0;
   const r = 52;
@@ -205,16 +267,30 @@ function renderNorthStar(ns, cap) {
   `;
 }
 
-function renderCapital(cap) {
+function renderCapital(cap, posAgg) {
   const cashPct =
     cap.pv > 0
       ? ((parseFloat(cap.cash) / parseFloat(cap.pv)) * 100).toFixed(0)
       : "—";
+  const posBlock =
+    posAgg != null
+      ? `
+    <div class="stat full brutto-netto-bar">
+      <div class="stat-label">Positionen Brutto / Netto (schätz.)</div>
+      <div class="stat-value brutto-netto-pair">
+        <span title="Summe Positionswerte">${fmtEur(posAgg.bruttoSum)}</span>
+        <span class="bn-sep">/</span>
+        <span title="Nach Modell-Abgeltungssteuer auf Gewinn">${fmtEur(posAgg.nettoSum)}</span>
+      </div>
+      <p class="bn-hint">Netto: Steuer nur auf Gewinn (Positionswert − Einsatz); Freibetrag nicht eingerechnet.</p>
+    </div>`
+      : "";
   $("capital-stats").innerHTML = `
     <div class="stat full">
       <div class="stat-label">Portfoliowert</div>
       <div class="stat-value">${fmtEur(cap.pv)}</div>
     </div>
+    ${posBlock}
     <div class="stat">
       <div class="stat-label">Cash</div>
       <div class="stat-value">${fmtEur(cap.cash)} <small>${cashPct}%</small></div>
@@ -241,30 +317,62 @@ function renderOperator(ov) {
     .join("");
 }
 
-function renderPositions(rows) {
+function renderPositions(rows, ov) {
   const idx = (h, name) => h.indexOf(name);
+  const steuer = parseSteuerRateFromOv(ov);
 
-  $("positions-table").innerHTML = tableFromRows(
-    rows,
-    [
-      {
-        label: "Asset",
-        render: (row, h) => assetCell(row[idx(h, "Asset")], row[idx(h, "Ticker")]),
+  $("positions-table").innerHTML =
+    tableFromRows(
+      rows,
+      [
+        {
+          label: "Asset",
+          render: (row, h) => assetCell(row[idx(h, "Asset")], row[idx(h, "Ticker")]),
+        },
+        { label: "Markt", key: "Markt" },
+        {
+          label: "Kaufkurs",
+          render: (r, h) =>
+            `<span class="mono-cell">${r[idx(h, "Kaufkurs")] || "—"}</span>`,
+        },
+        {
+          label: "Akt. Kurs",
+          render: (r, h) =>
+            `<span class="mono-cell">${r[idx(h, "Aktueller Kurs")] || "—"}</span>`,
+        },
+        {
+          label: "Brutto",
+          render: (r, h) => {
+            const b = bruttoNettoSchätz(
+              r[idx(h, "Positionswert")],
+              r[idx(h, "Positionsgröße")],
+              steuer,
+            );
+            return `<span class="mono-cell">${b.brutto}</span>`;
+          },
+        },
+        {
+          label: "Netto (schätz.)",
+          render: (r, h) => {
+            const b = bruttoNettoSchätz(
+              r[idx(h, "Positionswert")],
+              r[idx(h, "Positionsgröße")],
+              steuer,
+            );
+            return `<span class="mono-cell netto-cell">${b.netto}</span>`;
+          },
+        },
+        {
+          label: "Status",
+          render: (r, h) => statusBadge(r[idx(h, "Status")]),
+        },
+      ],
+      (row) => {
+        const asset = row[0]?.toLowerCase() || "";
+        return asset !== "keine" && asset !== "fehlt";
       },
-      { label: "Markt", key: "Markt" },
-      { label: "Kaufdatum", key: "Kaufdatum" },
-      { label: "Kurs", render: (r, h) => r[idx(h, "Aktueller Kurs")] || "—" },
-      { label: "Wert", render: (r, h) => fmtEur(r[idx(h, "Positionswert")]) },
-      {
-        label: "Status",
-        render: (r, h) => statusBadge(r[idx(h, "Status")]),
-      },
-    ],
-    (row) => {
-      const asset = row[0]?.toLowerCase() || "";
-      return asset !== "keine" && asset !== "fehlt";
-    },
-  );
+    ) +
+    `<p class="table-footnote">Brutto = Positionswert. Netto = Verkauf nach pauschaler Steuer auf den Gewinn (Einsatz = Positionsgröße).</p>`;
 }
 
 function renderWatchlist(rows) {
@@ -306,6 +414,42 @@ function renderChecks(block) {
     : '<li class="empty-state">Keine offenen Punkte.</li>';
 }
 
+function logField(fields, key) {
+  const f = fields.find((x) => x.key === key);
+  return f ? f.val : "";
+}
+
+/** Heuristik aus Fazit / Änderungen — klarere Lesbarkeit ob gehandelt wurde. */
+function classifyTradingAction(fields) {
+  const fazit = logField(fields, "Fazit").toLowerCase();
+  const änderungen = logField(fields, "Änderungen").toLowerCase();
+  const blob = `${fazit} ${änderungen}`;
+
+  if (
+    /keine ausführung|kein kauf|nicht gekauft|ohne ausführung|keine order|nur watchlist|watchlist erstellt,\s*keine|keine execution/i.test(
+      fazit,
+    ) ||
+    /keine ausführung|kein trade|positionen weiter keine/i.test(änderungen)
+  ) {
+    return {
+      label: "Kein Kauf",
+      sub: "Keine Ausführung",
+      cls: "log-action--none",
+    };
+  }
+  if (/verkauft|verkauf ausgef|teil.?verkauf|position reduziert|verkauf.*bestät/i.test(blob)) {
+    return { label: "Verkauf", sub: "Position reduziert / verkauft", cls: "log-action--sell" };
+  }
+  if (
+    /gekauft|erstkauf|kauf ausgef|neuposition|orders? ausgef|ausführung.*\(kauf|kauf.*ausgef/i.test(
+      blob,
+    )
+  ) {
+    return { label: "Gekauft", sub: "Ausführung / neue Position", cls: "log-action--buy" };
+  }
+  return { label: "Kein Trade-Hinweis", sub: "Analyse / Planung", cls: "log-action--neutral" };
+}
+
 function renderLog(entries) {
   if (!entries.length) {
     $("decision-log").innerHTML = '<p class="empty-state">Kein Log.</p>';
@@ -313,14 +457,21 @@ function renderLog(entries) {
   }
   $("decision-log").innerHTML = entries
     .slice(0, 5)
-    .map(
-      (e) => `
+    .map((e) => {
+      const act = classifyTradingAction(e.fields);
+      return `
       <article class="log-entry">
-        <div class="log-date">${e.date}</div>
+        <div class="log-entry-head">
+          <div class="log-date">${e.date}</div>
+          <div class="log-action ${act.cls}" title="${act.sub}">
+            <span class="log-action-label">${act.label}</span>
+            <span class="log-action-sub">${act.sub}</span>
+          </div>
+        </div>
         ${e.fields.map((f) => `<div class="log-line"><strong>${f.key}:</strong> ${f.val}</div>`).join("")}
       </article>
-    `,
-    )
+    `;
+    })
     .join("");
 }
 
@@ -361,10 +512,16 @@ async function load() {
       <span class="meta-pill">${modus}</span>
     `;
 
+    const positionRows = parseMarkdownTable(
+      section(portfolioText, "4. Aktuelle Positionen"),
+    );
+    const steuerRate = parseSteuerRateFromOv(ov);
+    const posAgg = aggregatePositionsBruttoNetto(positionRows, steuerRate);
+
     renderNorthStar(ns, cap);
-    renderCapital(cap);
+    renderCapital(cap, posAgg);
     renderOperator(ov);
-    renderPositions(parseMarkdownTable(section(portfolioText, "4. Aktuelle Positionen")));
+    renderPositions(positionRows, ov);
     renderWatchlist(
       parseMarkdownTable(section(portfolioText, "5. Watchlist-Zusammenfassung")),
     );
