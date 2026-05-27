@@ -5,6 +5,46 @@ Vollständige Historie: [`decision-log.md`](decision-log.md) · Archiv: [`../arc
 
 **Nach jedem Briefing:** `# NEW_LOG_ENTRY` hier **und** in `decision-log.md` einfügen.  
 **Monatlich:** Einträge älter als 14 Tage → nach `archiv/`, hier löschen.
+**QA Pflicht:** jede neue Zeile enthält `zielpfad_status`, `drawdown_stufe`, `regelkonflikt`.
+
+---
+
+## 2026-05-27 (Execution-Framework aktiviert)
+
+**North Star:** 4.148,25→8.296,50 EUR | Ist 4.148,25 EUR | Fortschritt 50,0 % | Lücke 4.148,25 EUR
+**DQ:** A- | **Fazit:** Konkretes 6-Monats-Framework für 2x-Ziel aktiviert | **Kaufen prüfen:** nur innerhalb Risikobudget | **Verkauf prüfen:** bei Alarmstufe/Trendbruch
+**Ausführung:** keine Order; Regelwerk geschärft
+**QA:** zielpfad_status=on_track; drawdown_stufe=normal; regelkonflikt=ja
+**Änderungen:** `portfolio-state.md` §6 erweitert (Risikobudget, Drawdown-Stufen, Rebalancing, Exit-Regeln, Review-Rhythmus) | **Watchlist:** unverändert
+**Gebühren/Steuer:** unverändert | **Risiko:** Ziel bleibt aggressiv, Regelwerk reduziert Verhaltensfehler
+**Nächster Schritt:** erste Wochenprüfung nach neuem Framework durchführen und Drawdown-Basiswert festhalten
+**Lernnotiz:** Ambitioniertes Ziel braucht harte, vorab definierte Prozessregeln.
+
+---
+
+## 2026-05-27 (Ziel-Reset auf 2x in 6 Monaten)
+
+**North Star:** 4.148,25→8.296,50 EUR | Ist 4.148,25 EUR | Fortschritt 50,0 % | Lücke 4.148,25 EUR
+**DQ:** A- | **Fazit:** North Star auf Portfolio-Verdopplung in 6 Monaten umgestellt | **Kaufen prüfen:** nach Risikobudget | **Verkauf prüfen:** bei Regime-/Trendbruch
+**Ausführung:** keine Order; Ziel-/Regelupdate
+**QA:** zielpfad_status=on_track; drawdown_stufe=normal; regelkonflikt=ja
+**Änderungen:** `portfolio-state.md` §0/§1/OPERATOR_VIEW auf neues Ziel und Zeitfenster aktualisiert | **Watchlist:** keine neue Position
+**Gebühren/Steuer:** unverändert | **Risiko:** Ziel ist aggressiv, Drawdown-Kontrolle bleibt zwingend
+**Nächster Schritt:** konkrete Rebalancing- und Risikobudget-Regeln für das 6-Monats-Ziel definieren
+**Lernnotiz:** Hartes Ziel nur mit klaren Exit- und Risikoregeln nachhaltig.
+
+---
+
+## 2026-05-27 (Broker-App v2 Migration)
+
+**North Star:** 500→5000 EUR | Ist 4.148,25 EUR | Fortschritt 83,0 % | Lücke 851,75 EUR
+**DQ:** A- | **Fazit:** Bestand auf reales Broker-Portfolio umgestellt | **Kaufen prüfen:** — | **Verkauf prüfen:** —
+**Ausführung:** keine Order; Datenmigration
+**QA:** zielpfad_status=ahead; drawdown_stufe=normal; regelkonflikt=ja
+**Änderungen:** RKLB/UEC aus `portfolio-state.md` entfernt; nur IE00063FT9K6 + IE00B53SZB19 als Positionen übernommen; Kapitalwerte auf Broker-Export gesetzt | **Watchlist:** §5 auf neue Positionen synchronisiert
+**Gebühren/Steuer:** keine neue Transaktion; Steuer weiter Modellannahme | **Risiko:** Cash nicht separat im CSV ausgewiesen
+**Nächster Schritt:** nächsten Export mit Cashfeld/Broker-Saldo ergänzen
+**Lernnotiz:** Bei App-/Datenversionswechsel immer Bestand aus Broker-Export priorisieren.
 
 ---
 

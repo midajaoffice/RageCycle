@@ -22,8 +22,8 @@ Intern bei jedem Lauf anwenden — nicht im Briefing ausformulieren.
 | **Daten vor Story** | Keine Kurse/P&L/PV erfinden; `FEHLT` / `NICHT VERIFIZIERT` stehen lassen |
 | **Halten ist aktiv** | `halten\|kein_neukauf` wenn keine Edge — nicht täglich umschichten |
 | **Verlust begrenzen** | Stop/These in §4 ernst; V1 bei Bruch, nicht „noch eine Chance“ |
-| **Gewinn nicht jagen** | Kein Nachkauf aus FOMO; Gewinnmitnahme erst ab ~+30 % pnl prüfen |
-| **10× = Filter** | North Star priorisiert — kein All-in, kein Kleinstticket ohne Gate |
+| **Gewinn nicht jagen** | Kein Nachkauf aus FOMO; Gewinne stufenweise sichern, Rest laufen lassen |
+| **2×/6M = Zielpfad, kein Versprechen** | North Star priorisiert Entscheidungen, ersetzt aber nicht Risikodisziplin |
 | **Mission Control führt** | Operator empfiehlt; Mensch bestätigt Ausführung |
 
 ---
@@ -44,9 +44,9 @@ Intern bei jedem Lauf anwenden — nicht im Briefing ausformulieren.
 
 | Parameter | Wert (aus portfolio-state §0) |
 |---|---|
-| Starsumme | z. B. 500 EUR |
-| Ziel | **10×** in **12 Monaten**, ohne Hebel |
-| Zielwert | Starsumme × 10 (z. B. 5.000 EUR) |
+| Starsumme | aktueller Startwert in §0 (z. B. 4.148,25 EUR) |
+| Ziel | aktuell **2× in 6 Monaten** (wenn in §0 so gesetzt) |
+| Zielwert | Starsumme × Ziel-Multiple (z. B. 8.296,50 EUR) |
 | Fortschritt | `aktueller PV ÷ Zielwert` in % |
 | Lücke | Zielwert − aktueller PV |
 
@@ -67,8 +67,8 @@ Bei „Kaufen prüfen“: Gebühren + grobe Steuer erwähnen (kein Steuerrecht).
 
 ### Mathematik (Orientierung)
 
-- +900 % auf Start in 12 Monaten ≈ extrem ambitioniert
-- Monatliche Compound-Richtung ~21,5 % — nur als Gap-Analyse, nicht als Versprechen
+- +100 % in 6 Monaten ist sehr ambitioniert.
+- Zielpfad-Monitoring: tatsächlicher PV gegen erwarteten Zwischenstand prüfen, nie als Garantie formulieren.
 
 ---
 
@@ -83,13 +83,19 @@ Bei „Kaufen prüfen“: Gebühren + grobe Steuer erwähnen (kein Steuerrecht).
 
 | Regel | Wert |
 |---|---|
-| Max. Einzelposition | 30 % |
+| Max. Einzelposition | 30 % (Standard) |
 | Hype-Idee | 5–10 % |
 | Normale Spekulation | 10–20 % |
 | All-in | verboten |
 | Max. gleichzeitige Positionen (§4) | **4** |
-| Min. Cash-Reserve | **20 %** des PV |
+| Min. Cash-Reserve | **20 %** des PV (Standard) |
 | Watchlist Radar (Beobachten etc.) | **5–8** Namen |
+
+Override-Regel (dokumentationspflichtig): Wenn Rebalancing-/Migrationszustand im `portfolio-state.md` einen temporären Regelkonflikt erzeugt (z. B. Cash < 20 % oder Gewicht > 30 %), gilt:
+
+1. Konflikt in Log als `regelkonflikt=ja` markieren.
+2. Kein neuer Risikoaufbau bis Rückkehr in Standardgrenzen oder bewusstem MC-Override.
+3. Priorität auf Risikoreduktion/Rebalancing statt neue Ideen.
 
 | DQ | Starke Kauf/Verkauf-Empfehlung |
 |---|---|
@@ -109,7 +115,7 @@ Details: [`operator-protocol.md`](operator-protocol.md) → Abschnitt **Portfoli
 |---|---|
 | **Einstieg** | max. 2× Kaufen prüfen/Lauf; max. 4 Positionen; Trade-Gate + Cash ≥ 20 % Reserve |
 | **Halten** | Positionen in §4 + Watchlist Status `Position`; Exit in Spalte Stop/Exit |
-| **Verkauf** | nur V1; Gründe: Stop/These, optional Gewinnmitnahme ab **+30 %** pnl |
+| **Verkauf** | V1 bei Trigger; ETF-Core: Drawdown-/Trend-/Regime-Trigger vor starren pnl-Schwellen |
 | **Watchlist raus** | → `ideen/rejected-ideas.md`, Zeile löschen (Position-Zeilen bis Verkauf behalten) |
 | **Auffüllen** | nach Verkauf/Verwerfen: Top-Score Beobachten oder 1× RESEARCH; Ziel 5–8 Radar-Namen |
 
@@ -120,11 +126,19 @@ Details: [`operator-protocol.md`](operator-protocol.md) → Abschnitt **Portfoli
 | Tag / Situation | Bevorzugter Modus | Aktion |
 |---|---|---|
 | Mo–Do | `maintenance` oder `thesis_scan` | Kein K1/V1 ohne Trigger |
-| Fr | `action` erlaubt | Max. **1× K1** oder **1× V1**, wenn Trigger |
+| Fr | `action` möglich | Wochenschluss-Rebalance nur bei Trigger |
 | Nach Earnings einer Position | `action` für diesen Ticker | Kurs + News (BEIDE) prüfen |
 | Ohne MC-Kursupdate | `maintenance` | Kein erfundenes pnl |
+| Drawdown-/Rebalance-Trigger erreicht | `action` | Risikobudget anwenden, V1/K1 nur regelbasiert |
 
 Details: [`operator-protocol.md`](operator-protocol.md) → **Operator-Modi**, **Lifecycle-Entscheidungsbaum**.
+
+### ETF-Core Trigger-Priorität (verbindlich)
+
+1. **Risikostufe zuerst:** Drawdown-Stufe aus `portfolio-state.md` §6.
+2. **Regime/News zweitens:** Makro- oder Themenbruch (`these_bruch`).
+3. **Relative Performance drittens:** Rebalancing-Schwellen zwischen Kernpositionen.
+4. **Starre pnl-Schwellen zuletzt:** nur ergänzende Heuristik, nicht Primärtreiber.
 
 ---
 

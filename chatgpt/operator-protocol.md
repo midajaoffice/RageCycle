@@ -55,9 +55,10 @@ DQ **D/E:** immer `maintenance`; keine K1/K2/V1.
 
 | Trigger | Primär | Operator-Aktion |
 |---|---|---|
-| `pnl ≤ -15%` (aus §4, MC-bestätigt) | **Kurs** | V1 `grund=stop` |
-| `pnl ≥ +30%` | **Kurs** (+ These prüfen) | V1 prüfen `grund=gewinnmitnahme` |
+| Drawdown-Stufe `alarm_2` in §6 / OPERATOR_VIEW | **Kurs+Risiko** | V1 prüfen `grund=risikoreduktion` |
+| Drawdown-Stufe `alarm_1` oder klarer Trendbruch | **Kurs** | V1 prüfen `grund=stop` |
 | Katalysator verfehlt / These bricht (News) | **News** | V1 `grund=these_bruch` |
+| Rebalance-Schwelle in §6 erreicht | **Beides** | Umschichtung prüfen `grund=rebalancing` |
 | `Story ≥ 6.5` **und** `Setup ≥ 6.0` + Trade-Gate + Cash | **Beides** | K1/K2 |
 | Keiner | — | `halten\|kein_neukauf`, `trigger=keiner` |
 
@@ -88,14 +89,16 @@ Pro Kandidat zusätzlich intern (Gewichtung):
 
 **Gesamt** → Status: Beobachten | Kaufen prüfen | Verkauf prüfen | Daten prüfen | Position
 
-### Positionsgrößen (Starsumme 500 €)
+### Positionsgrößen (Standardmodell)
 
 | Typ | % | EUR (Richtwert) |
 |---|---|---|
-| Hype-Idee | 5–10 % | 25–50 |
-| Normale Spekulation | 10–20 % | 50–100 |
-| Maximum Einzelposition | 30 % | 150 |
+| Hype-Idee | 5–10 % | PV-basiert |
+| Normale Spekulation | 10–20 % | PV-basiert |
+| Maximum Einzelposition | 30 % (Standard, Override dokumentieren) | PV-basiert |
 | Cash-Reserve | Pflicht | nicht All-in |
+
+Wenn `portfolio-state.md` §6 abweichende operative Grenzen enthält, gelten diese als aktuelle Arbeitsgrundlage.
 
 ### Trade-Gate (Pflicht bei „Kaufen prüfen“)
 
@@ -128,7 +131,7 @@ Defaults: FEE_ORDER = 1 €, SLIPPAGE_PCT = 0,25 %
 | **Position** | in §4 eingetragen, weiter in Watchlist + §5 |
 | **Verworfen** | aus aktiver Watchlist → [`../ideen/rejected-ideas.md`](../ideen/rejected-ideas.md) |
 
-### Portfolio-Grenzen (500 € Modell)
+### Portfolio-Grenzen (Standard)
 
 | Regel | Wert |
 |---|---|
@@ -136,6 +139,8 @@ Defaults: FEE_ORDER = 1 €, SLIPPAGE_PCT = 0,25 %
 | Max. **neue** „Kaufen prüfen“ pro Lauf | **2** (K1/K2) |
 | Min. **Cash-Reserve** | **20 %** des PV (Ausnahme nur mit Begründung im Log) |
 | Aktive Watchlist (ohne Position-Zeilen) | **5–8** Namen mit Status Beobachten / Kaufen prüfen / Daten prüfen |
+
+Bei dokumentiertem Regelkonflikt (z. B. Migrationszustand) muss `NEW_LOG_ENTRY` das Feld `regelkonflikt=ja` enthalten und neue Risikozunahme vermeiden.
 
 ### A) Kauf (Einstieg)
 
@@ -151,7 +156,7 @@ Defaults: FEE_ORDER = 1 €, SLIPPAGE_PCT = 0,25 %
 
 1. **Trigger-Typ** gesetzt? (`kurs` | `news` | `beides`)
 2. **§4 Stop/Exit** zitiert (Wortlaut aus portfolio-state)?
-3. **Teilverkauf** nötig? (bei 500 € Modell: meist **nein** — ganz halten oder V1 ganz)
+3. **Teilverkauf** nötig? (ETF-Core: Teilverkauf/Rebalance ist zulässig, wenn §6 das vorgibt)
 4. **Cash nach Verkauf** ≥ 20 % PV (Schätzung)?
 5. **Radar-Slot** frei für Auffüllen?
 
@@ -159,8 +164,8 @@ Briefing: `V1 — TICKER|grund=stop|trigger=kurs` (oder `these_bruch|trigger=new
 
 | Auslöser | Aktion Operator | Nach bestätigtem Verkauf (Mission Control) |
 |---|---|---|
-| **Stop/Exit** in §4 (z. B. −15 %, These bricht) | V1 mit `grund=stop` / `these_bruch` | §4-Zeile **entfernen**, Cash erhöhen, Watchlist: Ticker → **Verworfen** oder Zeile löschen + `rejected-ideas` |
-| **Gewinnmitnahme** (optional prüfen) | V1 wenn **pnl ≥ +30 %** *oder* Position > **30 %** PV durch Kursanstieg *oder* North-Star erfordert Umschichtung | wie Verkauf; Log `grund=gewinnmitnahme` |
+| **Stop/Exit** in §4 oder Drawdown-/Trend-Trigger aus §6 | V1 mit `grund=stop` / `these_bruch` / `risikoreduktion` | §4-Zeile anpassen/entfernen, Cash erhöhen, Watchlist-Status pflegen |
+| **Gewinnmitnahme / Rebalance** (optional prüfen) | V1 wenn Rebalance-Schwelle erreicht *oder* Position > Standardgrenze *oder* North-Star erfordert Umschichtung | wie Verkauf/Umschichtung; Log `grund=gewinnmitnahme` oder `grund=rebalancing` |
 | **DQ D/E** | kein V1, nur `daten_pruefen` | — |
 
 **Gewinnmitnahme ist keine Pflicht** — nur prüfen und im Log begründen. Kein automatischer Verkauf durch den Operator.
@@ -196,10 +201,11 @@ Nach **Verkauf**, **Verwerfen** oder wenn **&lt; 5** Beobachten-Kandidaten:
 | Watchlist-Status / §5 geändert | `# UPDATED_WATCHLIST` |
 | Verworfen | zusätzlich Zeile in `rejected-ideas` (Mission Control pflegt Datei; Operator liefert Markdown-Snippet im Log oder separaten Block `# REJECTED_IDEA` nur bei Verwerfen) |
 
-### F) NEW_LOG_ENTRY — Zusatzfeld
+### F) NEW_LOG_ENTRY — Zusatzfelder
 
 ```markdown
 **Ausführung:** keine | Kauf bestätigt | Verkauf bestätigt
+**QA:** zielpfad_status=on_track|behind|ahead; drawdown_stufe=normal|alarm_1|alarm_2; regelkonflikt=ja|nein
 ```
 
 Immer setzen: **keine** = nur Research; **Kauf/Verkauf bestätigt** = Mission Control hat ausgeführt (nicht der Operator).
@@ -219,7 +225,7 @@ Immer setzen: **keine** = nur Research; **Kauf/Verkauf bestätigt** = Mission Co
 ```text
 ### Briefing — 2026-05-25
 1. READ — cash=500 invest=0 pv=500 pos=keine dq=C
-2. NS — 500→5000|10.0%|lücke=4500|tag=1/365
+2. NS — 4148.25→8296.50|50.0%|lücke=4148.25|tag=1/182
 3. VAL — dq=C|broker,fractionals,fx
 4. ACT — keine_ausfuehrung|watchlist_8
 5. K1 — RKLB|7.2|eur=125|rt=2.63|be=2.10%|gate=kein_momentum_chase
@@ -234,7 +240,7 @@ Immer setzen: **keine** = nur Research; **Kauf/Verkauf bestätigt** = Mission Co
 ```text
 ### Briefing — 2026-05-26
 1. READ — cash=273 invest=225 pv=498 pos=RKLB,UEC dq=B
-2. NS — 500→5000|10.0%|lücke=4502|tag=2/365
+2. NS — 4148.25→8296.50|50.0%|lücke=4148.25|tag=2/182
 3. VAL — dq=B|broker_fill,fx_kurse
 4. ACT — halten|kein_neukauf
 7. POS — RKLB/Rocket Lab:125@135.76 pnl=0%,UEC/Uranium Energy:100@13.02 pnl=0%
@@ -248,7 +254,7 @@ Immer setzen: **keine** = nur Research; **Kauf/Verkauf bestätigt** = Mission Co
 ```text
 ### Briefing — 2026-05-27
 1. READ — cash=273 invest=225 pv=498 pos=RKLB,UEC dq=B
-2. NS — 500→5000|10.0%|lücke=4502|tag=3/365
+2. NS — 4148.25→8296.50|50.0%|lücke=4148.25|tag=3/182
 3. VAL — dq=B|broker_fill,fx_kurse,aktuelle_kurse
 4. ACT — halten|modus=maintenance|trigger=keiner
 5. POS — RKLB/Rocket Lab:125@135.76 pnl=0%,UEC/Uranium Energy:100@13.02 pnl=0%
@@ -274,9 +280,10 @@ Immer setzen: **keine** = nur Research; **Kauf/Verkauf bestätigt** = Mission Co
 
 ```markdown
 ## YYYY-MM-DD
-**North Star:** 500→5000|Ist …|Fortschritt …%|Lücke … EUR
+**North Star:** STARTWERT→ZIELWERT|Ist …|Fortschritt …%|Lücke … EUR
 **DQ:** … | **Fazit:** … | **Kaufen prüfen:** … | **Verkauf prüfen:** …
 **Ausführung:** keine | Kauf bestätigt | Verkauf bestätigt
+**QA:** zielpfad_status=on_track|behind|ahead; drawdown_stufe=normal|alarm_1|alarm_2; regelkonflikt=ja|nein
 **Änderungen:** … | **Watchlist:** …
 **Gebühren/Steuer:** … | **Risiko:** … | **Nächster Schritt:** …
 **Lernnotiz:** …
