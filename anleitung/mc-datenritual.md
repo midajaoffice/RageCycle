@@ -2,23 +2,20 @@
 
 > Nur für **Mission Control** — nicht ins ChatGPT Project.
 
-Ohne dieses Ritual bleibt der Operator im Modus `maintenance`.
+Der Operator holt Marktdaten in **STEP A per Web Search** selbst. MC muss Kurse nicht mehr vorab manuell „reinfüttern“.
 
 ---
 
 ## Checkliste (5 Min.)
 
-- [ ] Bitpanda-Handelbarkeit bestätigt (ja/nein)
-- [ ] Kurs unter 50 EUR verifiziert (zum Entscheidungszeitpunkt)
-- [ ] Frische Primär-Newsquelle zum Katalysator notiert
-- [ ] Volumen/Momentum-Check dokumentiert
-- [ ] Entry/Target/Stop/Time-stop festgelegt
 - [ ] OPERATOR_VIEW aktualisiert: `kapital`, `modus`, `state_machine`, `step_status`, `positionen_detail`
+- [ ] §5 Watchlist und Scores plausibel (Operator recherchiert Kurse in STEP A)
+- [ ] Bei geplantem Trade: finaler Order-Preview, Spread, Fractional-Ausführung in Bitpanda-App prüfen
 - [ ] Verlustserie (0–3) und Strategie-Status (aktiv/pause) in Log-Entwurf vorgeprüft
 
 ## A/B/C Handoff (pro Tageslauf)
 
-- STEP A Input vollständig vorbereiten (Kurse, Katalysator-Quelle, Volumen, Gate-Felder).
+- STEP A: Operator mit Web Search (Kurse, Quellen, Volumen) — kein manuelles Gate-Füttern nötig.
 - STEP B nur starten, wenn STEP A vollständig ist.
 - STEP C nur übernehmen, wenn A und B konsistent abgeschlossen wurden.
 
@@ -45,7 +42,7 @@ step_status: step_a=offen|ok|step_b=offen|ok|step_c=offen|ok
 positionen_detail: TICKER pnl=... trigger_kurs=ok|alarm trigger_news=ok|watch next=...
 ```
 
-- MC pflegt Kurs, pnl, next.
+- MC pflegt bestätigte Fills, §4-Kurse nach Ausführung, `next`.
 - Operator pflegt Trigger-Logik im Sync.
 
 ---

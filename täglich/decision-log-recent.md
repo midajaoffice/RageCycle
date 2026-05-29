@@ -10,6 +10,19 @@ Vollständige Historie: [`decision-log.md`](decision-log.md) · Archiv: [`../arc
 ---
 
 
+## 2026-05-29
+
+**North Star:** 100→200 EUR | Ist 100 EUR | Fortschritt 50,0 % | Lücke 100 EUR
+**DQ:** B | **Fazit:** STEP A/B/C abgeschlossen; kein Kauf ohne Score >=80 und vollständiges Gate | **Kaufen prüfen:** — | **Verkauf prüfen:** —
+**Ausführung:** keine
+**QA:** zielpfad_status=behind; drawdown_stufe=normal; regelkonflikt=nein; verlustserie=0; strategie_status=aktiv; no_trade_grund=score_unter_80+gate_fail; step_a_ok=ja; step_b_ok=ja; step_c_ok=ja
+**Änderungen:** step_status ok; state_machine bleibt candidate; keine Position; Top-2 mit Defaults geprüft | **Watchlist:** unverändert, NIO Top-Kandidat Score 75
+**Gebühren/Steuer:** Modell unverändert 1 EUR pro Order, 0,25 % Slippage je Seite, 27,5 % AT-KESt | **Risiko:** kleine Ticketgröße; Volumen-Widersprüche; Score-Minima knapp, aber Score <80
+**Nächster Schritt:** MC prüft Intraday-Volumen RGTI/NIO und Order-Preview nur bei Score >=80
+**Lernnotiz:** Katalysator und Preisfilter reichen nicht; Score-Schwelle und Volumen-Gate blockieren buy_check.
+
+---
+
 ## 2026-05-28
 
 **North Star:** 100→200 EUR | Ist 100 EUR | Fortschritt 50,0 % | Lücke 100 EUR

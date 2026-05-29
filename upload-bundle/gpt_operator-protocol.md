@@ -21,8 +21,8 @@ In einer Konversation läuft jeder Tageszyklus strikt als:
 
 Verpflichtungen:
 
-- STEP A liefert Gate/Faktenbasis.
-- STEP B nutzt nur STEP-A-Ergebnisse plus Files.
+- STEP A liefert Gate/Faktenbasis **mit Pflicht-Web-Recherche** (Kurse, Quellen, Volumen).
+- STEP B nutzt STEP-A-Ergebnisse (inkl. `external:`-Marktdaten) plus Files.
 - STEP C emittiert nur finale Produktivblöcke.
 
 Verboten:
@@ -36,18 +36,25 @@ Verboten:
 ## Phase 2 — VALIDATE
 
 - DQ aus `portfolio-state.md` prüfen.
-- Fehlende Pflichtdaten (`Kurs`, `Volumen`, `Newsquelle`, `Bitpanda-Verfügbarkeit`) in `VAL` nennen.
+- Fehlende Pflichtdaten (`Kurs`, `Volumen`, `Newsquelle`) in `VAL` nennen.
 - Bei schwacher Datenlage: `ACT = daten_pruefen|modus=maintenance|trigger=datenluecke`.
+
+### STEP A — Web-augmented (verbindlich)
+
+- **Web Search in STEP A ist immer Pflicht**, unabhängig von `modus` in OPERATOR_VIEW.
+- Aus `portfolio-state.md` nur Bestand/Kapital/Positionen/§5-Status — **keine** Marktkurse erfinden.
+- Pro §5-Kandidat recherchieren: `price_eur`, `price_lt_50`, `catalyst_source`, `volume_check`.
+- Web-Fakten als `external:` taggen; Links in STEP A erlaubt (nicht im Briefing).
+- Kein `bitpanda_ok`-Feld.
 
 ### Pre-Trade-Gate (hart, vor `kauf_pruefen`)
 
 Pflichtfelder:
 
-- `bitpanda_ok=yes`
-- `price_lt_50=yes`
+- `price_lt_50=yes` (Web-Recherche STEP A)
 - `catalyst_source=<quelle>`
 - `volume_check=pass`
-- `ziel_pct=<...>` + `stop_pct=<...>` + `time_stop_days=<...>`
+- `ziel_pct=<...>` + `stop_pct=<...>` + `time_stop_days=<...>` (STEP B darf §3-Defaults setzen)
 - `fee_gate=pass`
 
 Wenn ein Feld fehlt oder `fail` ist -> kein `kauf_pruefen`.
@@ -63,8 +70,8 @@ Trader-Disziplin: [`operator-core.md`](operator-core.md).
 
 | Modus | Web Search | §4 Kurse / pnl |
 |---|---|---|
-| `maintenance` | nein | keine erfundenen Updates |
-| `thesis_scan` | ja | Katalysator-/Newsvalidierung bei bestehender Position/Kandidat |
+| `maintenance` | ja in **STEP A** (Marktdaten); Briefing/§4 nur File | keine erfundenen Positions-Updates |
+| `thesis_scan` | ja | Katalysator-/Newsvalidierung bei Kandidat/Position |
 | `action` | ja | Kauf-/Verkauf-Prüfung nach Hard Rules |
 
 Moduswahl:
@@ -85,7 +92,7 @@ Moduswahl:
 
 | Trigger | Primär | Operator-Aktion |
 |---|---|---|
-| Score >= 80 + alle Gate-Felder `pass/yes` + Potenzial >= 15–20 % | News+Momentum | kauf_pruefen |
+| Score >= 80 + alle Gate-Felder `pass/yes` (ohne bitpanda_ok) + Potenzial >= 15–20 % | News+Momentum | kauf_pruefen |
 | Kurs +25 % bis +50 % oder klar überhitzt | Kurs+Volumen | verkauf_pruefen `grund=zielzone` |
 | Kurs -8 % bis -15 % | Risiko | verkauf_pruefen `grund=stop` |
 | Katalysator widerlegt / negative News | News | verkauf_pruefen `grund=these_bruch` |
@@ -111,7 +118,7 @@ ACT-Format: `halten|modus=maintenance|trigger=keiner` oder `verkauf_pruefen|modu
 | **Breakout** | Nähe zu Ausbruch/High | 0–10 |
 | **Newsqualität** | Glaubwürdigkeit der Quellen | 0–10 |
 | **Dilution-Risk** | Verwässerungsrisiko | 0–5 |
-| **Bitpanda + <50** | handelbar und Preisfilter | 0–5 |
+| **Preisfilter <50 EUR** | Kurs unter 50 EUR (Web) | 0–5 |
 | **Chance/Risiko** | Ziel vs. Stop passt | 0–5 |
 
 Kaufen prüfen nur bei **Score >= 80** und erfüllten Hard Rules.
@@ -241,7 +248,7 @@ Beispiel:
 5. K1 — TICKER|score=84|catalyst=19/25|newsq=8/10|mom=10/15|crv=4/5|entry=limit|ziel=+30%|stop=-10%|haltedauer=5-10T|gate=ok
 6. RAD — T1:beobachten,T2:beobachten,T3:daten_pruefen
 7. RISK — gebuehren_bei_kleinbetrag;single_position_drawdown
-8. NEXT — mission_control_prueft_bitpanda_order_und_fill
+8. NEXT — mission_control_prueft_order_preview_und_fill
 ```
 
 ### B) Sync-Blöcke (Teil 2 — für Mission Control)

@@ -13,7 +13,7 @@ RageCycle Operator — Memory-Regeln:
 SPEICHERN (JA):
 - Täglich neuer Chat; Wahrheit nur in portfolio-state.md (OPERATOR_VIEW zuerst)
 - Strategie: Aggressive Catalyst Rotation (hoch spekulativ)
-- Hard Rules: max 1 Position, nahezu 100% Einsatz, nur Bitpanda, Kurs < 50 EUR
+- Hard Rules: max 1 Position, nahezu 100% Einsatz, Kurs < 50 EUR; STEP A immer Web Search für Kurse/News/Volumen
 - Kauf nur bei frischem Katalysator + Momentum + Volumen + Score >= 80
 - Exit: Zielzone +25 bis +50, Stop -8 bis -15, Time-stop 5-10 Handelstage
 - Nach 3 Verlusttrades Pause; unter 50 EUR Kapital Strategie-Reevaluation

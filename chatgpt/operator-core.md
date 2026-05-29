@@ -27,8 +27,8 @@ Strategie ist bewusst hochspekulativ:
 |---|---|
 | Gleichzeitige Positionen | **max. 1** |
 | Kapitaleinsatz pro Trade | **nahezu 100 %** des verfügbaren Kapitals |
-| Broker/Universum | nur Bitpanda-Assets, nur handelbare Real Stocks/ETFs/ETCs |
-| Preisfilter | nur Ticker mit Kurs **unter 50 EUR** |
+| Broker/Universum | Ausführung über Bitpanda (Real Stocks/ETFs/ETCs); Research-Universum: regulierte Börsen |
+| Preisfilter | nur Ticker mit recherchiertem Kurs **unter 50 EUR** |
 | Katalysatorpflicht | mind. 1 frische, belastbare News |
 | Entry-Qualität | Momentum + Volumen + Breakout-Kontext |
 | Mindestpotenzial | kein Trade unter **15–20 %**, bevorzugt **>=25 %** |
@@ -42,12 +42,13 @@ Strategie ist bewusst hochspekulativ:
 
 `kauf_pruefen` ist nur erlaubt, wenn **alle** Punkte explizit erfüllt sind:
 
-1. `bitpanda_ok=yes`
-2. `price_lt_50=yes`
-3. `catalyst_source` gesetzt (konkrete Quelle)
-4. `volume_check=pass`
-5. `ziel_pct`, `stop_pct`, `time_stop_days` gesetzt
-6. `fee_gate=pass` (inkl. Break-even-Check)
+1. `price_lt_50=yes` (aus Web-Recherche in STEP A, als `external:` markiert)
+2. `catalyst_source` gesetzt (konkrete Quelle mit Beleg)
+3. `volume_check=pass` (aktuell vs Referenz-Durchschnitt)
+4. `ziel_pct`, `stop_pct`, `time_stop_days` gesetzt (STEP B: Strategie-Defaults aus §3 erlaubt)
+5. `fee_gate=pass` (inkl. Break-even-Check)
+
+**Kein** `bitpanda_ok`-Gate. Bitpanda-Order-Preview/Fill nur Mission Control bei echter Ausführung.
 
 Wenn ein Punkt fehlt oder `fail` ist -> **kein `kauf_pruefen`**, Status `Daten prüfen` oder `Beobachten`.
 
@@ -55,13 +56,14 @@ Wenn ein Punkt fehlt oder `fail` ist -> **kein `kauf_pruefen`**, Status `Daten p
 
 ## Datenhierarchie
 
-1. `portfolio-state.md` — inkl. **OPERATOR_VIEW** zuerst lesen
+1. `portfolio-state.md` — inkl. **OPERATOR_VIEW** zuerst lesen (**nur** Bestand, Cash, Positionen, gespeicherte Scores/Status)
 2. `decision-log-recent.md` — Historie, nie Bestandswahrheit
 3. `watchlist.md` — Radar und Kandidatenvergleich
 4. Diese Datei (`operator-core.md`)
 5. `operator-protocol.md`
-6. Session-Input / Web Search
-7. Nicht ChatGPT Memory für Bestand, Cash, Kurse, PnL
+6. **Web Search in STEP A (Pflicht)** — Kurse, Newsquellen, Volumen; als `external:` kennzeichnen
+7. Session-Input
+8. Nicht ChatGPT Memory für Bestand, Cash, Kurse, PnL
 
 ---
 
@@ -81,8 +83,8 @@ Kein Steuerrecht liefern, nur grobe Modellrechnung. Kleine Trades ohne Edge verm
 
 | Modus | Einsatz |
 |---|---|
-| `maintenance` | keine verlässlichen frischen Kurs-/Newsdaten, kein Setup mit Score >= 80 |
-| `thesis_scan` | aktiver Kandidat/Position vorhanden, Fokus auf Katalysator-Validierung |
+| `maintenance` | kein Setup mit Score >= 80 / kein buy_check; **STEP A nutzt trotzdem Web Search** für Marktdaten |
+| `thesis_scan` | aktiver Kandidat/Position, Fokus Katalysator-Validierung |
 | `action` | klarer Trigger für Kauf-/Verkauf-Prüfung nach Hard Rules |
 
 ---
@@ -98,7 +100,7 @@ Kein Steuerrecht liefern, nur grobe Modellrechnung. Kleine Trades ohne Edge verm
 | Breakout-Nähe/neues Hoch | 10 |
 | News-Glaubwürdigkeit | 10 |
 | Verwässerungsrisiko niedrig | 5 |
-| Bitpanda + Kurs <50 EUR | 5 |
+| Preisfilter Kurs <50 EUR | 5 |
 | Chance-Risiko-Verhältnis | 5 |
 
 **Kaufprüfung nur bei Score >= 80** und erfüllten Hard Rules.

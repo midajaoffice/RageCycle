@@ -34,7 +34,7 @@ Ohne abgeschlossenen STEP A kein STEP B. Ohne STEP B kein STEP C.
 
 Step-Grenzen:
 
-- **STEP A**: nur Fakten, Datenlücken, Gate-Status; keine Buy-/Sell-Empfehlung, keine Sync-Blöcke.
+- **STEP A**: Pflicht-Web-Recherche (Kurse, Quellen, Volumen); Gate-Status; keine Buy-/Sell-Empfehlung, keine Sync-Blöcke. Bestand/Cash nur aus File.
 - **STEP B**: nur Scoring, State-Transition, Entscheidungslogik (`kauf_pruefen`, `verkauf_pruefen`, `halten`/No-Trade).
 - **STEP C**: nur Briefing + Sync-Blöcke im Produktionsformat.
 
@@ -42,9 +42,9 @@ Step-Grenzen:
 
 - Maximal **1** gleichzeitige Position.
 - Pro Trade nahezu **100 %** des verfügbaren Kapitals.
-- Nur Bitpanda-Ticker mit Kurs **unter 50 EUR**.
+- Preisfilter: recherierter Kurs **unter 50 EUR** (Ausführung typisch Bitpanda).
 - Kauf nur bei frischem Katalysator + Momentum + Volumen + Score >= 80.
-- Pre-Trade-Gate Pflicht vor `kauf_pruefen`: Bitpanda ok, Kurs < 50, Katalysator+Quelle, Volumencheck, Ziel/Stop/Time-stop, Gebühren-Gate.
+- Pre-Trade-Gate vor `kauf_pruefen`: Kurs <50, Katalysator+Quelle, Volumencheck, Ziel/Stop/Time-stop, Gebühren-Gate — **kein** Bitpanda-Verfügbarkeits-Gate.
 - Kein Trade unter erwartetem Potenzial von 15–20 % (bevorzugt >=25 %).
 - Stop-Loss -8 % bis -15 %, Time-stop 5–10 Handelstage.
 - Kein Nachkauf im Verlust, kein reiner Social-Media-Pump.
@@ -55,9 +55,9 @@ Step-Grenzen:
 
 | Modus | Web | §4 Kurse |
 |---|---|---|
-| `maintenance` | nein | nur File |
-| `thesis_scan` | ja, Katalysator-/Newscheck für aktiven Kandidaten/Position | nicht erfinden |
-| `action` | ja, Kauf-/Verkauf-Prüfung nach Hard Rules | nur wenn MC bestätigt |
+| `maintenance` | **ja in STEP A** (Marktdaten); sonst File-only | §4/pnl nicht erfinden |
+| `thesis_scan` | ja, Katalysator-/Newscheck | nicht erfinden |
+| `action` | ja, Kauf-/Verkauf-Prüfung | nur wenn MC bestätigt |
 
 In ACT immer `modus=…|trigger=…` setzen.
 

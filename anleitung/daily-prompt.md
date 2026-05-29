@@ -6,24 +6,30 @@ Nutze pro Tag **eine** Project-Konversation und fahre die Schritte strikt in Rei
 2. STEP B senden und Ergebnis abwarten
 3. STEP C senden und Sync-Blöcke übernehmen
 
-## STEP A — Data & Gate Check
+## STEP A — Data & Gate Check (Web-augmented)
 
 ```text
-STEP A — Data & Gate Check.
+STEP A — Data & Gate Check (web-augmented).
 
 Lies zuerst OPERATOR_VIEW in portfolio-state.md (inkl. modus, positionen_detail), dann §4/§5/§6.
-Zahlen nur aus portfolio-state.md, nie aus Memory.
 
-Erstelle für jeden relevanten Kandidaten:
-- bitpanda_ok=yes/no
-- price_lt_50=yes/no
-- catalyst_source=<Quelle oder FEHLT>
-- volume_check=pass/fail
-- ziel_pct, stop_pct, time_stop_days
-- fee_gate=pass/fail
+Datenhierarchie (strikt):
+- Aus portfolio-state.md NUR: Cash, PV, investiert, Positionen, state_machine, Scores/Status aus §5, offene Prüfpunkte.
+- Nie aus Memory für Bestand/Kapital.
+- Web Search in STEP A ist PFLICHT (auch bei modus=maintenance): aktuelle Kurse, Newsquellen, Volumen vs Referenz.
 
-Nenne VAL-Datenlücken und markiere je Kandidat gate_status=ok|fail:<grund>.
-Erlaube in STEP A keine Kauf-/Verkaufsentscheidung und keine Sync-Blöcke.
+Für jeden Kandidaten in §5 recherchieren und ausgeben:
+- price_eur=<Wert oder FEHLT> (USD nur mit FX-Hinweis)
+- price_lt_50=yes/no (aus recherchiertem Kurs)
+- catalyst_source=<Quellenname + Kurzbeleg; Link in STEP A erlaubt>
+- volume_check=pass/fail (aktuell vs Referenz-Durchschnitt; bei Widerspruch: fail)
+- ziel_pct, stop_pct, time_stop_days (FEHLT ok in STEP A; STEP B setzt Strategie-Defaults)
+- fee_gate=pass/fail (nur wenn Ziel/Stop gesetzt, sonst fail:parameter_fehlt)
+- gate_status=ok|fail:<grund>
+- Markiere Web-Fakten mit Tag external: wo nicht aus File.
+
+Kein bitpanda_ok — Bitpanda-Verfügbarkeit ist kein Gate mehr.
+Keine Kauf-/Verkaufsentscheidung, keine Sync-Blöcke.
 Wenn STEP A abgeschlossen ist, stoppe und warte auf "STEP B".
 ```
 
@@ -32,15 +38,16 @@ Wenn STEP A abgeschlossen ist, stoppe und warte auf "STEP B".
 ```text
 STEP B — Score & Decision.
 
-Nutze nur STEP-A-Ergebnisse + File-Daten.
+Nutze STEP-A-Ergebnisse (inkl. Web-Kurse/Quellen/Volumen) + File-Daten.
 Regeln:
 - Score >= 80 Pflicht
 - Kategorie-Minima: Catalyst >=18/25, Newsqualität >=7/10, Momentum >=8/15, Chance/Risiko >=3/5
 - Kein kauf_pruefen bei Gate-Fail oder Minima-Fail
+- Für Top-2-Kandidaten: ziel_pct/stop_pct/time_stop_days aus §3-Defaults setzen (+25% / -10% / 7T), wenn STEP A FEHLT hatte
 - State Machine strikt: flat -> candidate -> buy_check -> position -> sell_check -> flat
 
 Liefere:
-- Scoring je Top-Kandidat
+- Scoring je Top-Kandidat (ohne Bitpanda-Spalte; Preisfilter <50 EUR separat)
 - Entscheidung: kauf_pruefen | verkauf_pruefen | halten
 - no_trade_grund falls kein Trade
 - vorgeschlagener nächster state_machine-Übergang

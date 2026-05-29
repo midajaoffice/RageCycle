@@ -1,6 +1,6 @@
 # Portfolio State
 
-**Letztes Update:** 2026-05-28
+**Letztes Update:** 2026-05-29
 **Datenqualität:** B
 **Modus:** Aggressive Catalyst Rotation / Research-Unterstützung
 
@@ -13,15 +13,15 @@
 > Operator: **zuerst nur diesen Block lesen.** Bei jedem Update vollständig aktualisieren.
 
 ```
-north_star: 100→200|EUR|fortschritt:50.0%|luecke:100|tag:0/182|ziel_datum:2026-11-24
+north_star: 100→200|EUR|fortschritt:50.0%|luecke:100|tag=4/182|ziel_datum:2026-11-24
 kapital: cash=100|investiert=0|pv=100|dq=B
 modus: maintenance
 state_machine: candidate
 step_status: step_a=ok|step_b=ok|step_c=ok
 positionen: keine
-positionen_detail: keine_aktive_position|candidate=NIO|score=75|next=bitpanda_app_und_intraday_volumen_pruefen
+positionen_detail: keine_aktive_position|candidate=NIO|score=75|next=mc_prueft_intraday_volumen_RGTI_NIO_und_order_preview_nur_bei_score_>=80
 watchlist_top: NIO
-letzte_entscheidung: halten|score_unter_80|2026-05-28
+letzte_entscheidung: halten|score_unter_80_gate_fail|2026-05-29
 gebuehren_modell: 1EUR/order|0.25pct_slippage|steuer_modell:27.5pct_AT
 ```
 
@@ -65,13 +65,13 @@ Spekulatives Modellportfolio von 100 EUR mit schneller Catalyst-Rotation handeln
 
 ## 2. Kapital
 
-| Feld                                |                                                                                                Wert |
-| ----------------------------------- | --------------------------------------------------------------------------------------------------: |
-| Startkapital                        |                                                                                                 100 |
-| Aktueller geschätzter Portfoliowert |                                                                                                 100 |
-| Verfügbares Cash                    |                                                                                                 100 |
-| Investiertes Kapital                |                                                                                                   0 |
-| Nicht verifizierte Werte            | Kandidaten-News, Bitpanda-App-Verfügbarkeit, Intraday-Volumen, finaler Spread/Fractional-Ausführung |
+| Feld                                |                                                                          Wert |
+| ----------------------------------- | ----------------------------------------------------------------------------: |
+| Startkapital                        |                                                                           100 |
+| Aktueller geschätzter Portfoliowert |                                                                           100 |
+| Verfügbares Cash                    |                                                                           100 |
+| Investiertes Kapital                |                                                                             0 |
+| Nicht verifizierte Werte            | Finaler Order-Preview, Spread/Fractional-Ausführung (nur MC bei echtem Trade) |
 
 ---
 
@@ -80,7 +80,7 @@ Spekulatives Modellportfolio von 100 EUR mit schneller Catalyst-Rotation handeln
 * Keine echten Trades ohne menschliche Bestätigung.
 * Max. **1** gleichzeitige Position in §4.
 * Pro Trade nahezu **100 %** des verfügbaren Kapitals.
-* Nur Bitpanda-Ticker mit Kurs **unter 50 EUR**.
+* Nur Ticker mit recherchiertem Kurs **unter 50 EUR** (STEP A: Web Search).
 * Kauf nur bei Score **>=80** und frischem Katalysator.
 * Kein Trade mit Potenzial unter **15–20 %** (bevorzugt >=25 %).
 * Stop-Loss **-8 % bis -15 %** vorab definieren.
@@ -101,35 +101,36 @@ Spekulatives Modellportfolio von 100 EUR mit schneller Catalyst-Rotation handeln
 
 ## 5. Watchlist-Zusammenfassung
 
-| Asset              | Ticker | Markt  | Thema                           | Katalysator                                                         | Risiko                                        | Score | Status       | Nächster Prüfpunkt                                                                    |
-| ------------------ | ------ | ------ | ------------------------------- | ------------------------------------------------------------------- | --------------------------------------------- | ----: | ------------ | ------------------------------------------------------------------------------------- |
-| NIO                | NIO    | NYSE   | EV / China / Overseas Push      | ES9-/Overseas-Push, April-Lieferungen +22,8 % YoY, hohes Volumen    | EV-Wettbewerb, China-Makro, ADR-Risiko        |    75 | Beobachten   | Score >=80 nur bei stärkerem Momentum/Breakout; Bitpanda-App und Volumen final prüfen |
-| Rigetti Computing  | RGTI   | NASDAQ | Quantum Computing               | LOI mit U.S. Commerce für bis zu 100 Mio. USD Quantum-R&D-Förderung | Bitpanda-App-Check offen, Verwässerungsrisiko |    77 | Daten prüfen | Bitpanda-App-Verfügbarkeit und finalen Volumencheck prüfen                            |
-| SoundHound AI      | SOUN   | NASDAQ | Voice AI / KI                   | Q1-Umsatz +52 % YoY, FY26-Outlook bestätigt                         | Bitpanda-App-Check offen, KI-Multiple-Risiko  |    73 | Daten prüfen | Bitpanda-App-Verfügbarkeit prüfen                                                     |
-| Riot Platforms     | RIOT   | NASDAQ | Bitcoin Mining / AI Data Center | Q1-/Data-Center-Shift, AMD Capacity-Option                          | Intraday-Volumen offen, BTC-Korrelation       |    65 | Daten prüfen | Intraday-Volumen gegen 50T-Avg prüfen                                                 |
-| Archer Aviation    | ACHR   | NYSE   | eVTOL / Defense / Aviation      | FAA-/Midnight-Zertifizierung, Defense-/Partnerstory                 | Bitpanda-App-Check offen, Kapitalbedarf       |    66 | Daten prüfen | Bitpanda-App-Verfügbarkeit prüfen                                                     |
-| D-Wave Quantum     | QBTS   | NYSE   | Quantum Computing               | U.S.-Förderpaket / Quantum-Funding-Story                            | Bitpanda-App-Check und Volumen offen          |    62 | Daten prüfen | Bitpanda-App und Volumencheck prüfen                                                  |
-| Intuitive Machines | LUNR   | NASDAQ | Space / Lunar Infrastructure    | Lunar-Reconnaissance/Q1-Backlog, aber NASA-Rover-Negativkatalysator | Katalysator gemischt, Volumen offen           |    54 | Beobachten   | Nur bei klarer positiver Newsqualität neu prüfen                                      |
-| DroneShield        | DRO    | ASX    | Counter-Drone / Defense         | Counter-drone-Nachfrage und Pipeline                                | ASIC-Probe, Volumen offen, Risk-Event         |    58 | Beobachten   | Risk-Event und Volumen klären                                                         |
+| Asset              | Ticker | Markt  | Thema                           | Katalysator                                                         | Risiko                                         | Score | Status       | Nächster Prüfpunkt                                                          |
+| ------------------ | ------ | ------ | ------------------------------- | ------------------------------------------------------------------- | ---------------------------------------------- | ----: | ------------ | --------------------------------------------------------------------------- |
+| NIO                | NIO    | NYSE   | EV / China / Overseas Push      | ES9-/Overseas-Push, April-Lieferungen +22,8 % YoY, hohes Volumen    | EV-Wettbewerb, China-Makro, ADR-Risiko         |    75 | Beobachten   | Score >=80; Ziel/Stop/Time-stop setzen; finaler Order-Preview vor buy_check |
+| Rigetti Computing  | RGTI   | NASDAQ | Quantum Computing               | LOI mit U.S. Commerce für bis zu 100 Mio. USD Quantum-R&D-Förderung | Verwässerungsrisiko, Volumen schwach           |    77 | Daten prüfen | Volumencheck; Ziel/Stop/Time-stop; Score-Minima                             |
+| SoundHound AI      | SOUN   | NASDAQ | Voice AI / KI                   | Q1-Umsatz +52 % YoY, FY26-Outlook bestätigt                         | KI-Multiple-Risiko, Volumen unter Durchschnitt |    73 | Daten prüfen | Volumen/Momentum; Score-Minima                                              |
+| Riot Platforms     | RIOT   | NASDAQ | Bitcoin Mining / AI Data Center | Q1-/Data-Center-Shift, AMD Capacity-Option                          | Intraday-Volumen schwach, BTC-Korrelation      |    65 | Daten prüfen | Volumen gegen 50T-Avg; Catalyst-Minima                                      |
+| Archer Aviation    | ACHR   | NYSE   | eVTOL / Defense / Aviation      | FAA-/Midnight-Zertifizierung, Defense-/Partnerstory                 | Kapitalbedarf, CRV offen                       |    66 | Daten prüfen | Ziel/Stop/Time-stop; Score-Minima                                           |
+| D-Wave Quantum     | QBTS   | NYSE   | Quantum Computing               | U.S.-Förderpaket / Quantum-Funding-Story                            | Volumen schwach                                |    62 | Daten prüfen | Volumencheck; Catalyst-Minima                                               |
+| Intuitive Machines | LUNR   | NASDAQ | Space / Lunar Infrastructure    | Lunar-Reconnaissance/Q1-Backlog, aber NASA-Rover-Negativkatalysator | Katalysator gemischt, Volumen offen            |    54 | Beobachten   | Nur bei klarer positiver Newsqualität neu prüfen                            |
+| DroneShield        | DRO    | ASX    | Counter-Drone / Defense         | Counter-drone-Nachfrage und Pipeline                                | ASIC-Probe, Risk-Event offen                   |    58 | Beobachten   | Risk-Event und Volumen klären                                               |
 
 ---
 
 ## 6. Offene Prüfpunkte
 
-- Bitpanda-App-Verfügbarkeit für RGTI, SOUN, QBTS, LUNR und ACHR prüfen.
-- Intraday-Volumen für RIOT, DRO, QBTS und LUNR gegen Referenzvolumen prüfen.
-- NIO nur als Kandidat beobachten; kein `buy_check`, solange Score unter 80 bleibt.
-- Finalen EUR-Preis, Spread, Fractional-Ausführung und Ordergültigkeit vor jedem `buy_check` prüfen.
+* NIO nur als Kandidat beobachten; kein `buy_check`, solange Score unter 80 bleibt.
+* RGTI nur weiter prüfen; kein `buy_check`, solange Score unter 80 bleibt oder Volumencheck nicht sauber bestätigt ist.
+* Ziel_pct, Stop_pct und Time_stop_days vor jedem `buy_check` konkret setzen; STEP B-Defaults für Top-2: +25 % / -10 % / 7T.
+* Fee-Gate erst nach finalem Order-Preview und Break-even-Check freigeben (Mission Control).
+* Finalen EUR-Preis zum Order-Zeitpunkt, Spread, Fractional-Ausführung und Ordergültigkeit vor Ausführung prüfen (MC).
 
 ---
 
 ## 7. Bekannte Unsicherheiten
 
-* DQ **B**: Markt-/Newsdaten teils zeitverzögert.
+* DQ **B**: Markt-/Newsdaten teils zeitverzögert; Web-Recherche in STEP A, nicht in File gespeichert.
 * Catalyst-Score ist heuristisch und kann schnell kippen.
 * Gebühren/Steuer sind Modellannahmen.
-* Bitpanda-Verfügbarkeit wurde browserseitig nicht für alle Kandidaten verifiziert.
 * Kein Broker-Fill, kein Real-Order-Preview und keine echte Ausführung bestätigt.
+* STEP-A-Volumendaten bei mehreren Kandidaten widersprüchlich; bei Widerspruch wurde `volume_check=fail` gesetzt.
 
 ---
 
@@ -137,3 +138,4 @@ Spekulatives Modellportfolio von 100 EUR mit schneller Catalyst-Rotation handeln
 
 * 2026-05-28: Clean-Slate-Reset durchgeführt (keine Positionen, Watchlist geleert).
 * 2026-05-28: STEP A/B/C abgeschlossen; Watchlist mit 8 Kandidaten neu aufgebaut; NIO als `candidate`/Top-Beobachtung gesetzt; keine Kaufprüfung, keine Ausführung.
+* 2026-05-29: STEP A/B/C abgeschlossen; Web-Gate geprüft; keine Position; keine Kaufprüfung wegen `score_unter_80_gate_fail`; state_machine bleibt `candidate`.

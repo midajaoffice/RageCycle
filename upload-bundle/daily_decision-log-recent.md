@@ -10,16 +10,29 @@ Vollständige Historie: [`decision-log.md`](decision-log.md) · Archiv: [`../arc
 ---
 
 
+## 2026-05-29
+
+**North Star:** 100→200 EUR | Ist 100 EUR | Fortschritt 50,0 % | Lücke 100 EUR
+**DQ:** B | **Fazit:** STEP A/B/C abgeschlossen; kein Kauf ohne Score >=80 und vollständiges Gate | **Kaufen prüfen:** — | **Verkauf prüfen:** —
+**Ausführung:** keine
+**QA:** zielpfad_status=behind; drawdown_stufe=normal; regelkonflikt=nein; verlustserie=0; strategie_status=aktiv; no_trade_grund=score_unter_80+gate_fail; step_a_ok=ja; step_b_ok=ja; step_c_ok=ja
+**Änderungen:** step_status ok; state_machine bleibt candidate; keine Position; Top-2 mit Defaults geprüft | **Watchlist:** unverändert, NIO Top-Kandidat Score 75
+**Gebühren/Steuer:** Modell unverändert 1 EUR pro Order, 0,25 % Slippage je Seite, 27,5 % AT-KESt | **Risiko:** kleine Ticketgröße; Volumen-Widersprüche; Score-Minima knapp, aber Score <80
+**Nächster Schritt:** MC prüft Intraday-Volumen RGTI/NIO und Order-Preview nur bei Score >=80
+**Lernnotiz:** Katalysator und Preisfilter reichen nicht; Score-Schwelle und Volumen-Gate blockieren buy_check.
+
+---
+
 ## 2026-05-28
 
 **North Star:** 100→200 EUR | Ist 100 EUR | Fortschritt 50,0 % | Lücke 100 EUR
-**DQ:** B | **Fazit:** Migration auf Aggressive Catalyst Rotation; kein Kauf ohne Score >=80 | **Kaufen prüfen:** — | **Verkauf prüfen:** —
+**DQ:** B | **Fazit:** STEP A/B/C abgeschlossen; Watchlist neu aufgebaut; kein Kauf ohne Score >=80 | **Kaufen prüfen:** — | **Verkauf prüfen:** —
 **Ausführung:** keine
-**Änderungen:** OPERATOR_VIEW auf 1-Positionslogik; Watchlist auf Catalyst-Score 0-100 umgestellt | **Watchlist:** keine Kaufprüfung
-**Gebühren/Steuer:** Modell bleibt 1 EUR pro Trade, 27,5 % KESt-Hinweis | **Risiko:** kleines Kapital, Gebührenhebel hoch
-**Nächster Schritt:** nächsten Kandidaten nur bei Score >=80 und Potenzial >=15-20 % freigeben
-**QA:** zielpfad_status=behind | drawdown_stufe=normal | regelkonflikt=nein | verlustserie=0 | strategie_status=aktiv | no_trade_grund=score_unter_minima | step_a_ok=ja | step_b_ok=ja | step_c_ok=ja
-**Lernnotiz:** Ohne klare Catalyst-Edge ist No-Trade ein korrektes Ergebnis.
+**QA:** zielpfad_status=behind; drawdown_stufe=normal; regelkonflikt=nein; verlustserie=0; strategie_status=aktiv; no_trade_grund=score_unter_minima
+**Änderungen:** state_machine flat→candidate; NIO als Top-Kandidat mit Score 75 gesetzt; keine Position | **Watchlist:** 8 Kandidaten, kein `Kaufen prüfen`
+**Gebühren/Steuer:** Modell unverändert 1 EUR pro Order, 0,25 % Slippage je Seite, 27,5 % AT-KESt | **Risiko:** score_unter_80; Bitpanda-/Volumen-/Execution-Datenlücken
+**Nächster Schritt:** Mission Control prüft Bitpanda-App-Verfügbarkeit und Intraday-Volumen für NIO/RGTI/SOUN/RIOT/ACHR/QBTS
+**Lernnotiz:** Ein vollständiges Gate allein reicht nicht; Score >=80 bleibt Pflicht.
 
 ---
 
