@@ -1,38 +1,40 @@
 # Watchlist
 
-Ideen und Kandidaten zur Beobachtung. **Keine** Kaufempfehlung.
+Ideen und Kandidaten zur Beobachtung. Keine Kaufempfehlung.
 
 ## Regeln (Radar + Positionen)
 
-| Regel | Wert |
-|---|---|
-| Radar (Beobachten / Kaufen prüfen / Daten prüfen) | **5–8** Ticker |
-| Offene Positionen | max. **4** (Wahrheit in `portfolio-state.md` §4) |
-| Status **Position** | bleibt hier + §5, bis **Verkauf** bestätigt |
-| Status **Verworfen** | Zeile **entfernen** → Eintrag in [`../ideen/rejected-ideas.md`](../ideen/rejected-ideas.md) |
-| Auffüllen | nach Verkauf/Verwerfen: höchster Score unter Beobachten oder 1× neues RESEARCH-Thema |
-| **Kaufen prüfen** | nur wenn **Story ≥ 6.5** und **Setup ≥ 6.0** und Trade-Gate |
-| Operator-Pipeline | [`../chatgpt/operator-protocol.md`](../chatgpt/operator-protocol.md) → Portfolio-Lebenszyklus, Story/Setup |
+| Regel                                             | Wert                                                                                                                   |
+| ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| Radar (Beobachten / Kaufen prüfen / Daten prüfen) | 5–8 Ticker                                                                                                             |
+| Offene Positionen                                 | max. 1 (Wahrheit in `portfolio-state.md` §4)                                                                           |
+| Status Position                                   | bleibt bis Verkauf bestätigt                                                                                           |
+| Status Verworfen                                  | Zeile entfernen und in `rejected-ideas.md` dokumentieren                                                               |
+| Auffüllen                                         | nach Exit/Verwerfen: nächster Top-Score-Kandidat                                                                       |
+| Kaufen prüfen                                     | nur bei Score >= 80 und Trade-Gate                                                                                     |
+| Kategorie-Minima                                  | Catalyst >=18/25, Newsqualität >=7/10, Momentum >=8/15, Chance/Risiko >=3/5                                            |
+| Pre-Trade-Gate                                    | bitpanda_ok, price_lt_50, catalyst_source, volume_check, ziel/stop/time_stop, fee_gate müssen vollständig erfüllt sein |
+| Operator-Pipeline                                 | `operator-protocol.md` (Catalyst-Score + Lifecycle)                                                                    |
 
 ## Aktive Watchlist
 
-| Asset | Ticker | Markt | Thema | Fakt / Annahme / Spekulation | Katalysator | Warum interessant? | Hauptrisiko | Story | Setup | Score | Status | Nächster Prüfpunkt | DQ |
-|---|---|---|---|---|---|---|---|---:|---:|---:|---|---|---|
-| iShares Nasdaq 100 UCITS ETF (Acc) | IE00B53SZB19 | Direkthandel | US-Tech-Beta | Fakt: Broker-Export 2026-05-26, Stück 0,86067, Kurswert 1.273,10 EUR; Annahme: AI-Capex-Zyklus trägt weiter | US-Earnings, Fed-Pfad, MegaCap-Resultate | Kern-Exposure auf US-Qualitäts-Tech | Bewertungsniveau, Makro-/Zinsregime | 7.0 | 7.0 | 7.0 | Position | Earnings + Fed-Kommunikation prüfen | A- |
-| iShares Copper Miners UCITS ETF | IE00063FT9K6 | Direkthandel | Rohstoffe / Kupferminen | Fakt: Broker-Export 2026-05-26, Stück 301, Kurswert 2.875,15 EUR; Annahme: Elektrifizierungs-/Infrastruktur-Nachfrage stützt Kupfer | Kupferpreis, China-Daten, Minenmargen | Rohstoffzyklus-Hebel ohne Single-Stock-Risiko | Zyklik, China-Schwäche, Commodity-Drawdown | 6.6 | 6.6 | 6.6 | Position | Kupfertrend + China-PMI prüfen | A- |
-| AST SpaceMobile | ASTS | NASDAQ | Space / Direct-to-device | Fakt: 105,86 USD; Q1 Umsatz 14,7 Mio.; Guidance 150–200 Mio.; Annahme: Launch-Kadenz gelingt; Spekulation: kommerzielle Aktivierung beschleunigt | BlueBird, FCC, MNOs | massiver TAM/Hype | Launch-Verzug, Capex, Verwässerung | 6.6 | 6.6 | 6.6 | Beobachten | BlueBird 8–10 / 45-Sat-Ziel prüfen | B- |
-| Red Cat | RCAT | NASDAQ | Defense / Drohnen | Fakt: 9,41 USD; Q1 Umsatz +849 %; Annahme: Army/NATO-Nachfrage hält; Spekulation: Drohnen-Supercycle | SRR/Army, NATO-Drohnen | hohe Defense-Beta | Earnings-Miss, Margen, Execution | 6.5 | 6.5 | 6.5 | Beobachten | Q2 Margen + Cashburn | B- |
-| Kratos Defense | KTOS | NASDAQ | Defense / Unmanned | Fakt: 56,18 USD; Q1 Umsatz 371 Mio.; Guidance erhöht; Annahme: Defense-Budgets stark | Hypersonics, unmanned, directed-energy | sauberer Defense-Fit | PE/Bewertung hoch | 6.4 | 6.4 | 6.4 | Beobachten | neue Prime-Contracts | B- |
-| Super Micro | SMCI | NASDAQ | KI-Infrastruktur | Fakt: 35,58 USD; Q3 Sales 10,2 Mrd.; FY26 Sales 38,9–40,4 Mrd.; Annahme: AI-Server-Nachfrage bleibt | Blackwell/AI-Server | günstiger als Hype-Peers | Cashflow, Margen, Export-Control-Review | 6.2 | 6.2 | 6.2 | Beobachten | Review/Cashflow klären | B- |
-| Vertiv | VRT | NYSE | KI-Infrastruktur | Fakt: 327,46 USD; Q1 Sales +30 %; Annahme: Data-center Capex bleibt stark | Cooling/Power, Guidance | Qualitätsname im AI-Infrastruktur-Trade | zu teuer je Aktie ohne Fractionals, Bewertung | 6.1 | 6.1 | 6.1 | Daten prüfen | Broker Fractionals? Pullback? | B- |
-| Corsair Gaming | CRSR | NASDAQ | Gaming / Hardware | Fakt: 7,70 USD; Q1 Umsatz 123,3 Mio., +10 %; Annahme: Gaming/Sim-Racing Nachfrage stabilisiert | Q1 Profit-Growth, AI-Produkte | günstiger Gaming-Turnaround | Konsumzyklus, Tarife, geringerer Hype | 5.8 | 5.8 | 5.8 | Beobachten | Q2 Nachfrage/Margen | B- |
+| Asset              | Ticker | Markt  | Thema                           | Fakt / Annahme / Spekulation                              | Katalysator                                                         | Warum interessant?                                                              | Hauptrisiko                                            | Score | Status       | Nächster Prüfpunkt                                                                    | DQ |
+| ------------------ | ------ | ------ | ------------------------------- | --------------------------------------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------ | ----: | ------------ | ------------------------------------------------------------------------------------- | -- |
+| NIO                | NIO    | NYSE   | EV / China / Overseas Push      | Fakt: STEP-A-Gate ok; Score unter 80                      | ES9-/Overseas-Push, April-Lieferungen +22,8 % YoY, hohes Volumen    | Einziger Kandidat mit vollständigem STEP-A-Gate; Momentum und Volumen plausibel | EV-Wettbewerb, China-Makro, ADR-Risiko, Score nur 75   |    75 | Beobachten   | Score >=80 nur bei stärkerem Momentum/Breakout; Bitpanda-App und Volumen final prüfen | B  |
+| Rigetti Computing  | RGTI   | NASDAQ | Quantum Computing               | Annahme: starker Katalysator; Gate offen                  | LOI mit U.S. Commerce für bis zu 100 Mio. USD Quantum-R&D-Förderung | Quantum-Hype und Funding-Katalysator                                            | Bitpanda-App-Check offen, Verwässerungsrisiko          |    77 | Daten prüfen | Bitpanda-App-Verfügbarkeit und finalen Volumencheck prüfen                            | B  |
+| SoundHound AI      | SOUN   | NASDAQ | Voice AI / KI                   | Annahme: Growth-Katalysator; Gate offen                   | Q1-Umsatz +52 % YoY, FY26-Outlook bestätigt                         | KI-Narrativ, Umsatzwachstum, hohes Interesse                                    | Bitpanda-App-Check offen, Multiple-/Volatilitätsrisiko |    73 | Daten prüfen | Bitpanda-App-Verfügbarkeit prüfen                                                     | B  |
+| Riot Platforms     | RIOT   | NASDAQ | Bitcoin Mining / AI Data Center | Fakt/Annahme: Bitpanda + Preisfilter ok; Volumen offen    | Q1-/Data-Center-Shift, AMD Capacity-Option                          | BTC-/AI-Infrastruktur-Kombination                                               | Intraday-Volumen offen, BTC-Korrelation                |    65 | Daten prüfen | Intraday-Volumen gegen 50T-Avg prüfen                                                 | B  |
+| Archer Aviation    | ACHR   | NYSE   | eVTOL / Defense / Aviation      | Annahme: thematisch stark; Gate offen                     | FAA-/Midnight-Zertifizierung, Defense-/Partnerstory                 | eVTOL- und Defense-Narrativ                                                     | Bitpanda-App-Check offen, Kapitalbedarf                |    66 | Daten prüfen | Bitpanda-App-Verfügbarkeit prüfen                                                     | B  |
+| D-Wave Quantum     | QBTS   | NYSE   | Quantum Computing               | Annahme: Sektor-Katalysator; Gate offen                   | U.S.-Förderpaket / Quantum-Funding-Story                            | Quantum-Momentum, Spekulationsinteresse                                         | Bitpanda-App-Check und Volumen offen                   |    62 | Daten prüfen | Bitpanda-App und Volumencheck prüfen                                                  | B  |
+| Intuitive Machines | LUNR   | NASDAQ | Space / Lunar Infrastructure    | Spekulation: gemischter Katalysator                       | Lunar-Reconnaissance/Q1-Backlog, aber NASA-Rover-Negativkatalysator | Space-Narrativ mit Event-Potenzial                                              | Katalysator gemischt, Volumen offen                    |    54 | Beobachten   | Nur bei klarer positiver Newsqualität neu prüfen                                      | B  |
+| DroneShield        | DRO    | ASX    | Counter-Drone / Defense         | Fakt/Annahme: Bitpanda + Preisfilter ok; Risk-Event offen | Counter-drone-Nachfrage und Pipeline                                | Defense-/Counter-drone-Momentum                                                 | ASIC-Probe, Volumen offen, Risk-Event                  |    58 | Beobachten   | Risk-Event und Volumen klären                                                         | B  |
 
 ## Themenradar
 
-| Thema | Katalysatoren | Risiko | Status |
-|---|---|---|---|
-| Space / Satelliten | Launch-Verträge, Space Force, FCC, D2D | Bewertung, Launch-Risiko | aktiv |
-| Verteidigung | Drohnen, C-UAS, NATO, Hypersonics | Margen, Haushaltszyklen | aktiv |
-| KI-Infrastruktur | AI-Server, Cooling, Power, Data-center Capex | Bewertung, Margen, Exportkontrollen | aktiv |
-| Gaming | Hardware-Erholung, Sim-Racing, Releases | Konsumzyklus, Tarife | beobachten |
-| Uran / Rohstoffe | Uranpreis, US-Fuel-Security, Nuclear-for-AI | Commodity-Volatilität, Projekt-Ramp | aktiv |
+| Thema                        | Katalysatoren                                           | Risiko                                                | Status |
+| ---------------------------- | ------------------------------------------------------- | ----------------------------------------------------- | ------ |
+| Quantum Computing            | U.S.-Funding, Regierungsprogramme, Defense-/R&D-Budgets | Verwässerung, Hype-Reversal, Broker-Verfügbarkeit     | aktiv  |
+| AI Voice / Application AI    | Umsatzwachstum, Enterprise-AI-Adoption                  | hohe Multiples, schnelle Sentimentwechsel             | aktiv  |
+| EV China                     | Lieferzahlen, neue Modelle, Overseas-Push               | Margendruck, China-Makro, ADR-Risiko                  | aktiv  |
+| Defense / Counter-Drone      | Nachfrage durch geopolitische Lage, Order-Pipeline      | politische Headline-Risiken, regulatorische Prüfungen | aktiv  |
+| Space / Lunar Infrastructure | NASA-/Defense-Aufträge, Backlog, Missionsnews           | Auftragsverluste, Event-Risiko, hohe Volatilität      | aktiv  |

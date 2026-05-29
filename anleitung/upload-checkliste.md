@@ -1,6 +1,6 @@
 # ChatGPT Project — Upload-Checkliste
 
-Project-Name: **`HypeCycle`**
+Project-Name: **`RageCycle`**
 
 ---
 
@@ -19,6 +19,18 @@ Project-Name: **`HypeCycle`**
 | 3 | `täglich/portfolio-state.md` |
 | 4 | `täglich/decision-log-recent.md` |
 | 5 | `täglich/watchlist.md` |
+
+Alternativ als flaches Bundle (mit Präfixen `gpt_`/`daily_`):
+
+- Ordner: `upload-bundle/`
+- Aktualisieren mit: `python3 tools/build_upload_bundle.py`
+- Entsprechende Dateien:
+  - `upload-bundle/gpt_operator-core.md`
+  - `upload-bundle/gpt_operator-protocol.md`
+  - `upload-bundle/gpt_chatgpt-instructions.md`
+  - `upload-bundle/daily_portfolio-state.md`
+  - `upload-bundle/daily_decision-log-recent.md`
+  - `upload-bundle/daily_watchlist.md`
 
 **Nicht hochladen:** `operator-rules.md`, `north-star.md` (Redirects), `hcsp-lite.md`, `anleitung/`, `archiv/`, `decision-log.md` (nur Git/lokal), `ideen/rejected-ideas.md` (Mission Control)
 

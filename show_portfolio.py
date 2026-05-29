@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Display HypeCycle portfolio from täglich/portfolio-state.md (stdlib only)."""
+"""Display RageCycle portfolio from täglich/portfolio-state.md (stdlib only)."""
 
 from __future__ import annotations
 
@@ -93,7 +93,7 @@ def main() -> None:
     ov = parse_operator_view(text)
 
     print("=" * 72)
-    print("  HypeCycle — Portfolio")
+    print("  RageCycle — Aggressive Catalyst Rotation")
     print("=" * 72)
     print(f"  Source: {STATE_FILE.relative_to(ROOT)}")
     print(f"  Updated: {meta_value(text, 'Letztes Update')}")
@@ -140,6 +140,7 @@ def main() -> None:
         print_kv([("Action", parts[0]), ("Detail", parts[1]), ("Date", parts[2] if len(parts) > 2 else "—")])
     else:
         print(f"  {ents}")
+    print(f"  State machine: {ov.get('state_machine', 'flat')}")
     print(f"  Watchlist top: {ov.get('watchlist_top', '—')}")
 
     # Positions
@@ -160,7 +161,7 @@ def main() -> None:
                 size = row[7] if len(row) > 7 else ""
                 print(f"  • {asset} ({ticker})  size={size}  status={status}")
 
-    # Watchlist (compact)
+    # Watchlist (compact, catalyst score)
     print_header("Watchlist")
     wl_rows = parse_markdown_table(section(text, "5. Watchlist-Zusammenfassung"))
     if wl_rows and len(wl_rows) > 1:

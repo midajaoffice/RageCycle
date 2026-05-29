@@ -2,31 +2,37 @@
 
 > Nur für **Mission Control** — nicht ins ChatGPT Project.
 
-Ohne dieses Ritual bleibt der Operator im Modus `maintenance` (pnl unverifiziert, Stop-Trigger tot).
+Ohne dieses Ritual bleibt der Operator im Modus `maintenance`.
 
 ---
 
 ## Checkliste (5 Min.)
 
-- [ ] **Broker-Fill** bestätigt (Stückzahl, Fill-Kurs, Gebühr, Datum)
-- [ ] **FX** USD→EUR notiert (falls US-Titel)
-- [ ] **Aktueller Kurs** pro Position in §4 eingetragen (MC-Quelle: Broker oder manuell)
-- [ ] **pnl %** geschätzt (siehe Formel unten)
-- [ ] **PV** neu: Cash + Summe Positionswerte (nach Kurs)
-- [ ] **OPERATOR_VIEW** aktualisiert: `kapital`, `modus`, `positionen_detail`
-- [ ] **DQ** gesetzt: A/B nur wenn Kurse MC-bestätigt; sonst B + „NICHT VERIFIZIERT“ in §7
+- [ ] Bitpanda-Handelbarkeit bestätigt (ja/nein)
+- [ ] Kurs unter 50 EUR verifiziert (zum Entscheidungszeitpunkt)
+- [ ] Frische Primär-Newsquelle zum Katalysator notiert
+- [ ] Volumen/Momentum-Check dokumentiert
+- [ ] Entry/Target/Stop/Time-stop festgelegt
+- [ ] OPERATOR_VIEW aktualisiert: `kapital`, `modus`, `state_machine`, `step_status`, `positionen_detail`
+- [ ] Verlustserie (0–3) und Strategie-Status (aktiv/pause) in Log-Entwurf vorgeprüft
+
+## A/B/C Handoff (pro Tageslauf)
+
+- STEP A Input vollständig vorbereiten (Kurse, Katalysator-Quelle, Volumen, Gate-Felder).
+- STEP B nur starten, wenn STEP A vollständig ist.
+- STEP C nur übernehmen, wenn A und B konsistent abgeschlossen wurden.
 
 ---
 
 ## Formeln (Orientierung)
 
 ```
-pnl_pct ≈ (Aktueller_Kurs - Kaufkurs) / Kaufkurs × 100    (gleiche Währung pro Zeile)
-Positionswert_EUR ≈ Stück × Aktueller_Kurs × FX           (oder Broker-Wert in EUR)
-PV ≈ Cash + Σ Positionswerte
+round_trip_eur ≈ 2 × fee + 2 × (position_eur × slippage_pct)
+break_even_pct ≈ round_trip_eur / position_eur × 100
+min_target_pct ≈ max(15-20%, break_even_pct + sicherheitsaufschlag)
 ```
 
-Bei Rohstoff-/Themen-Risiko (z. B. UEC): Uranpreis/News in §6 notieren — ermöglicht Operator-Modus `thesis_scan`.
+Mit 100 EUR sind kleine Moves meist unattraktiv. Fees/Spread/FX vorab einpreisen.
 
 ---
 
@@ -34,11 +40,13 @@ Bei Rohstoff-/Themen-Risiko (z. B. UEC): Uranpreis/News in §6 notieren — erm�
 
 ```text
 modus: maintenance|thesis_scan|action
-positionen_detail: RKLB pnl=-3% trigger_kurs=ok trigger_news=watch next=…|UEC pnl=… trigger_kurs=… trigger_news=uran next=…
+state_machine: flat|candidate|buy_check|position|sell_check
+step_status: step_a=offen|ok|step_b=offen|ok|step_c=offen|ok
+positionen_detail: TICKER pnl=... trigger_kurs=ok|alarm trigger_news=ok|watch next=...
 ```
 
-- **MC pflegt:** `pnl`, `next` (aus Broker/Calendar)
-- **Operator pflegt** im Sync: `trigger_kurs`, `trigger_news` (ok|watch|offen|alarm)
+- MC pflegt Kurs, pnl, next.
+- Operator pflegt Trigger-Logik im Sync.
 
 ---
 
@@ -46,8 +54,8 @@ positionen_detail: RKLB pnl=-3% trigger_kurs=ok trigger_news=watch next=…|UEC 
 
 | Situation | modus |
 |---|---|
-| Kurse aktualisiert, kein Kauf/Verkauf-Trigger | `maintenance` |
-| Kurse ok, News-Scan für Positionen (§6) | `thesis_scan` |
-| K1/V1 geplant oder Freitag + Trigger | `action` |
+| Datenlücken oder kein Setup >=80 | `maintenance` |
+| Kandidat/Position wird auf Katalysator geprüft | `thesis_scan` |
+| Kauf-/Verkauf-Trigger erfüllt | `action` |
 
 Siehe auch: [`session-closeout.md`](session-closeout.md)

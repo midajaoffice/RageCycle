@@ -1,11 +1,11 @@
-# HypeCycle Dashboard
+# RageCycle Dashboard
 
-Interne Visualisierung — liest direkt aus `täglich/portfolio-state.md` und `decision-log-recent.md`.
+Interne Visualisierung fuer die Aggressive-Catalyst-Rotation — liest direkt aus `täglich/portfolio-state.md` und `decision-log-recent.md`.
 
 ## Starten
 
 ```bash
-cd "/Users/dreamwalker/Desktop/Buisness/HyperCycle/google-drive/HypeCycle"
+cd "/Users/dreamwalker/Desktop/Buisness/RageCycle/google-drive/RageCycle"
 chmod +x web/start.sh
 ./web/start.sh
 ```

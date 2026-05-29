@@ -1,8 +1,11 @@
-# Decision Log (vollständig)
+# Decision Log — Recent (Project)
 
-**Nicht** die Quelle der Wahrheit — nur Historie. Bestand steht in [`portfolio-state.md`](portfolio-state.md).
+**Nur die letzten ~14 Tage** — fürs ChatGPT Project.  
+Vollständige Historie: [`decision-log.md`](decision-log.md) · Archiv: [`../archiv/decision-log-archive.md`](../archiv/decision-log-archive.md)
 
-**ChatGPT Project** nutzt [`decision-log-recent.md`](decision-log-recent.md) (nur ~14 Tage).
+**Nach jedem Briefing:** `# NEW_LOG_ENTRY` hier **und** in `decision-log.md` einfügen.  
+**Monatlich:** Einträge älter als 14 Tage → nach `archiv/`, hier löschen.
+**QA Pflicht:** jede neue Zeile enthält `zielpfad_status`, `drawdown_stufe`, `regelkonflikt`, `verlustserie`, `strategie_status`, `no_trade_grund`, `step_a_ok`, `step_b_ok`, `step_c_ok`.
 
 ---
 
@@ -10,44 +13,13 @@
 ## 2026-05-28
 
 **North Star:** 100→200 EUR | Ist 100 EUR | Fortschritt 50,0 % | Lücke 100 EUR
-**DQ:** B | **Fazit:** STEP A/B/C abgeschlossen; Watchlist neu aufgebaut; kein Kauf ohne Score >=80 | **Kaufen prüfen:** — | **Verkauf prüfen:** —
+**DQ:** B | **Fazit:** Migration auf Aggressive Catalyst Rotation; kein Kauf ohne Score >=80 | **Kaufen prüfen:** — | **Verkauf prüfen:** —
 **Ausführung:** keine
-**QA:** zielpfad_status=behind; drawdown_stufe=normal; regelkonflikt=nein; verlustserie=0; strategie_status=aktiv; no_trade_grund=score_unter_minima
-**Änderungen:** state_machine flat→candidate; NIO als Top-Kandidat mit Score 75 gesetzt; keine Position | **Watchlist:** 8 Kandidaten, kein `Kaufen prüfen`
-**Gebühren/Steuer:** Modell unverändert 1 EUR pro Order, 0,25 % Slippage je Seite, 27,5 % AT-KESt | **Risiko:** score_unter_80; Bitpanda-/Volumen-/Execution-Datenlücken
-**Nächster Schritt:** Mission Control prüft Bitpanda-App-Verfügbarkeit und Intraday-Volumen für NIO/RGTI/SOUN/RIOT/ACHR/QBTS
-**Lernnotiz:** Ein vollständiges Gate allein reicht nicht; Score >=80 bleibt Pflicht.
-
----
-
-## Kurz-Eintrag (Pflicht — max. 15 Zeilen)
-
-Nach jedem Briefing `# NEW_LOG_ENTRY` einfügen in:
-
-1. **diese Datei** (`decision-log.md`)
-2. [`decision-log-recent.md`](decision-log-recent.md)
-
-```markdown
-## YYYY-MM-DD
-
-**North Star:** STARTWERT→ZIELWERT EUR | Ist FEHLT | Fortschritt FEHLT% | Lücke FEHLT EUR
-**DQ:** E | **Fazit:** Keine Aktion | **Kaufen prüfen:** — | **Verkauf prüfen:** —
-**Ausführung:** keine
-**QA:** zielpfad_status=on_track|behind|ahead; drawdown_stufe=normal|alarm_1|alarm_2; regelkonflikt=ja|nein; verlustserie=0|1|2|3; strategie_status=aktiv|pause; no_trade_grund=none|gate_fail|score_unter_minima|datenluecke|regime_riskoff; step_a_ok=ja|nein; step_b_ok=ja|nein; step_c_ok=ja|nein
-**Änderungen an portfolio-state:** keine | **Watchlist:** keine
-**Gebühren/Steuer heute:** — | **Risiko:** Datenlücken | **Nächster Schritt:** Starsumme eintragen
-**Lernnotiz:** Eine Zeile.
-```
-
----
-
-## Regeln
-
-- Kein Vollbriefing, keine Marktessays
-- Widerspricht ein alter Eintrag `portfolio-state.md` → **portfolio-state gewinnt**
-- `QA`-Zeile ist Pflicht: `zielpfad_status`, `drawdown_stufe`, `regelkonflikt`, `verlustserie`, `strategie_status`, `no_trade_grund`, `step_a_ok`, `step_b_ok`, `step_c_ok`
-- `decision-log-recent.md`: Einträge > 14 Tage → nach [`../archiv/decision-log-archive.md`](../archiv/decision-log-archive.md) verschieben
-- Diese Datei: optional ältere Einträge monatlich archivieren
+**Änderungen:** OPERATOR_VIEW auf 1-Positionslogik; Watchlist auf Catalyst-Score 0-100 umgestellt | **Watchlist:** keine Kaufprüfung
+**Gebühren/Steuer:** Modell bleibt 1 EUR pro Trade, 27,5 % KESt-Hinweis | **Risiko:** kleines Kapital, Gebührenhebel hoch
+**Nächster Schritt:** nächsten Kandidaten nur bei Score >=80 und Potenzial >=15-20 % freigeben
+**QA:** zielpfad_status=behind | drawdown_stufe=normal | regelkonflikt=nein | verlustserie=0 | strategie_status=aktiv | no_trade_grund=score_unter_minima | step_a_ok=ja | step_b_ok=ja | step_c_ok=ja
+**Lernnotiz:** Ohne klare Catalyst-Edge ist No-Trade ein korrektes Ergebnis.
 
 ---
 
@@ -102,7 +74,7 @@ Nach jedem Briefing `# NEW_LOG_ENTRY` einfügen in:
 
 ---
 
-## 2026-05-26 (Erstkauf)
+## 2026-05-26
 
 **North Star:** 500→5000 EUR | Ist 498 EUR | Fortschritt 10,0 % | Lücke 4.502 EUR
 **DQ:** B | **Fazit:** Erstkauf RKLB + UEC | **Kaufen prüfen:** — | **Verkauf prüfen:** —
@@ -114,7 +86,7 @@ Nach jedem Briefing `# NEW_LOG_ENTRY` einfügen in:
 
 ---
 
-## 2026-05-25 (Ursprungsportfolio)
+## 2026-05-25
 
 **North Star:** 500→5000 EUR | Ist 500 EUR | Fortschritt 10,0 % | Lücke 4.500 EUR
 **DQ:** C | **Fazit:** Watchlist erstellt, keine Ausführung | **Kaufen prüfen:** RKLB 125 €, UEC 100 € | **Verkauf prüfen:** —

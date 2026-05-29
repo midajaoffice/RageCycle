@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# HypeCycle Dashboard — lokaler Webserver
+# RageCycle Dashboard — lokaler Webserver
 cd "$(dirname "$0")/.." || exit 1
 PORT="${PORT:-8765}"
 echo ""
-echo "  HypeCycle Dashboard"
+echo "  RageCycle Dashboard"
 echo "  → http://localhost:${PORT}/web/"
 echo ""
 echo "  Stoppen: Ctrl+C"

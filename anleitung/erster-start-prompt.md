@@ -1,32 +1,39 @@
-# Erster Start-Prompt — 500 €
+# Erster Start-Prompt — Aggressive Catalyst Rotation
 
 > Copy-paste — **nicht** ins Project hochladen.
 
 Project-Dateien aktuell? Dann senden:
 
 ```text
-Folge operator-protocol.md Phase 1–5 (intern).
-Lies den Abschnitt „Portfolio-Lebenszyklus“ in operator-protocol.md (Grenzen, Verwerfen, späterer Verkauf — Erstlauf nutzt v. a. Kauf-Pfad + Watchlist).
-Lies OPERATOR_VIEW in portfolio-state.md, dann operator-core.md.
+DAY 1 BOOTSTRAP — A/B/C FLOW IN EINER KONVERSATION
+
+Du arbeitest im Broker-Simulationsmodus mit Aggressive Catalyst Rotation.
+Keine echten Trades, keine Finanzberatung. Mission Control bestätigt Ausführung.
+Zahlen nur aus portfolio-state.md, nie aus Memory.
 
 KONTEXT (Fakten):
-- Starsumme: 500 EUR Cash, keine Positionen
-- North Star: 5.000 EUR in 12 Monaten (10×, Start 2026-05-25), ohne Hebel
-- Gebühren: 1 EUR/Order, 0,25 % Slippage | Steuer-Modell: 26,375 % DE, 1.000 € Freistellung
-- Erlaubt: Aktien, ETFs, Rohstoff-ETPs (Xetra, NYSE, NASDAQ, Euronext)
-- Verboten: Krypto, Forex, CFD, Hebel, Optionen
-- Themen: Space, Verteidigung, KI-Infrastruktur, Gaming, Uran/Rohstoffe
+- Startkapital: 100 EUR
+- Zielmodus: Aggressive Catalyst Rotation, hochspekulativ
+- Max. 1 Position gleichzeitig, Kapitaleinsatz je Trade nahe 100 %
+- Nur Bitpanda, nur Ticker < 50 EUR
+- Gebühren: 1 EUR pro Kauf/Verkauf, Spread/FX einpreisen
+- Steuer-Modell: AT KESt 27,5 % (grobe Orientierung)
+- Kein Nachkauf im Verlust; Stop -8 % bis -15 %; Time-stop 5-10 Handelstage
+- Kategorie-Minima: Catalyst >=18/25, Newsqualität >=7/10, Momentum >=8/15, Chance/Risiko >=3/5
+- State Machine: flat -> candidate -> buy_check -> position -> sell_check -> flat
 
-AUFGABE — Erster Zyklus:
-VALIDATE → RESEARCH (Watchlist 5–8) → SCORE (max. 2× Kaufen prüfen + Trade-Gate) → EMIT
-Portfolio-Lebenszyklus: operator-protocol.md (max. 4 Positionen, 20 % Cash, Verwerfen → rejected-ideas).
+Schrittfolge Pflicht:
+STEP A -> STEP B -> STEP C
+Kein B ohne A. Kein C ohne B.
 
-Antwortformat strikt:
-1) ### Briefing — YYYY-MM-DD (max. 12 Zeilen, Schema aus Project Instructions)
-2) # UPDATED_PORTFOLIO_STATE (vollständig, OPERATOR_VIEW aktualisieren)
-3) # UPDATED_WATCHLIST
-4) # NEW_LOG_ENTRY (max. 15 Zeilen, Ausführung: keine|Kauf bestätigt|Verkauf bestätigt)
-5) # REJECTED_IDEA (nur bei Verwerfen)
+BEGINNE JETZT NUR MIT STEP A:
+- Bootstrap-Watchlist mit 5–8 Kandidaten (Simulation, plausibel, Bitpanda-fokussiert)
+- Für jeden Kandidaten: bitpanda_ok, price_lt_50, catalyst_source, volume_check, ziel_pct, stop_pct, time_stop_days, fee_gate
+- Gate-Status je Kandidat: gate_status=ok|fail:<grund>
+- VAL-Datenlücken nennen
+- State-Machine Vorschlag: flat -> candidate (falls geeigneter Kandidat), sonst flat bleibt
+- Keine Kauf-/Verkaufsentscheidung
+- Keine Sync-Blöcke
 
-Keine Einleitung, keine Links im Briefing, keine Regelwiederholung.
+Wenn STEP A fertig ist, stoppe und warte auf mein "STEP B".
 ```

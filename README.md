@@ -1,11 +1,11 @@
-# HypeCycle — Google Drive
+# RageCycle — Google Drive
 
 ---
 
 ## Ordnerstruktur
 
 ```
-HypeCycle/
+RageCycle/
 ├── README.md
 ├── TAGESROUTINE.md
 ├── web/                        ★ Dashboard (./web/start.sh)

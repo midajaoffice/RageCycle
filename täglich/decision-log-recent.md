@@ -5,21 +5,21 @@ Vollständige Historie: [`decision-log.md`](decision-log.md) · Archiv: [`../arc
 
 **Nach jedem Briefing:** `# NEW_LOG_ENTRY` hier **und** in `decision-log.md` einfügen.  
 **Monatlich:** Einträge älter als 14 Tage → nach `archiv/`, hier löschen.
-**QA Pflicht:** jede neue Zeile enthält `zielpfad_status`, `drawdown_stufe`, `regelkonflikt`.
+**QA Pflicht:** jede neue Zeile enthält `zielpfad_status`, `drawdown_stufe`, `regelkonflikt`, `verlustserie`, `strategie_status`, `no_trade_grund`, `step_a_ok`, `step_b_ok`, `step_c_ok`.
 
 ---
 
 
 ## 2026-05-28
 
-**North Star:** 500→5000 EUR | Ist 498 EUR | Fortschritt 10,0 % | Lücke 4.502 EUR
-**DQ:** B | **Fazit:** Halten; keine neue Kauf-/Verkauf-Prüfung | **Kaufen prüfen:** — | **Verkauf prüfen:** —
+**North Star:** 100→200 EUR | Ist 100 EUR | Fortschritt 50,0 % | Lücke 100 EUR
+**DQ:** B | **Fazit:** STEP A/B/C abgeschlossen; Watchlist neu aufgebaut; kein Kauf ohne Score >=80 | **Kaufen prüfen:** — | **Verkauf prüfen:** —
 **Ausführung:** keine
-**Änderungen:** OPERATOR_VIEW Tag 4/365; keine Cash-/Positionsänderung | **Watchlist:** keine Statusänderung
-**Gebühren/Steuer:** keine neuen Gebühren; Steuer nicht relevant | **Risiko:** Broker-Fill/FX/Kurse offen; 10×-Ziel ambitioniert
-**Nächster Schritt:** Broker-Fills und aktuelle Kurse nachziehen
-**QA:** zielpfad_status=unter_zielpfad_extrem_ambitioniert | drawdown_stufe=keine_mc_daten | regelkonflikt=nein
-**Lernnotiz:** Ohne bestätigte neue Kurs-/Fill-Daten bleibt Halten die aktive Entscheidung.
+**QA:** zielpfad_status=behind; drawdown_stufe=normal; regelkonflikt=nein; verlustserie=0; strategie_status=aktiv; no_trade_grund=score_unter_minima
+**Änderungen:** state_machine flat→candidate; NIO als Top-Kandidat mit Score 75 gesetzt; keine Position | **Watchlist:** 8 Kandidaten, kein `Kaufen prüfen`
+**Gebühren/Steuer:** Modell unverändert 1 EUR pro Order, 0,25 % Slippage je Seite, 27,5 % AT-KESt | **Risiko:** score_unter_80; Bitpanda-/Volumen-/Execution-Datenlücken
+**Nächster Schritt:** Mission Control prüft Bitpanda-App-Verfügbarkeit und Intraday-Volumen für NIO/RGTI/SOUN/RIOT/ACHR/QBTS
+**Lernnotiz:** Ein vollständiges Gate allein reicht nicht; Score >=80 bleibt Pflicht.
 
 ---
 

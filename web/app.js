@@ -182,7 +182,7 @@ function parseMoneyCell(s) {
   return Number.isNaN(n) ? NaN : n;
 }
 
-/** Steuersatz aus `gebuehren_modell` (z. B. steuer_modell:26.375pct_DE) — Fallback 26,375 %. */
+/** Steuersatz aus `gebuehren_modell` (z. B. steuer_modell:27.5pct_AT) — Fallback 27,5 %. */
 function parseSteuerRateFromOv(ov) {
   const g = (ov && ov.gebuehren_modell) || "";
   const m = g.match(/steuer_modell:([\d.,]+)pct/i);
@@ -190,7 +190,7 @@ function parseSteuerRateFromOv(ov) {
     const r = parseFloat(m[1].replace(",", ".")) / 100;
     if (!Number.isNaN(r) && r > 0 && r < 1) return r;
   }
-  return 0.26375;
+  return 0.275;
 }
 
 /**
@@ -276,7 +276,7 @@ function renderCapital(cap, posAgg) {
     posAgg != null
       ? `
     <div class="stat full brutto-netto-bar">
-      <div class="stat-label">Positionen Brutto / Netto (schätz.)</div>
+      <div class="stat-label">Position Brutto / Netto (schätz.)</div>
       <div class="stat-value brutto-netto-pair">
         <span title="Summe Positionswerte">${fmtEur(posAgg.bruttoSum)}</span>
         <span class="bn-sep">/</span>
@@ -306,6 +306,7 @@ function renderOperator(ov) {
   const ents = (ov.letzte_entscheidung || "—").split("|");
   const rows = [
     ["Positionen", ov.positionen || "keine"],
+    ["State Machine", ov.state_machine || "flat"],
     ["Watchlist Top", ov.watchlist_top || "—"],
     ["Letzte Aktion", ents[0] || "—"],
     ["Detail", ents[1] || "—"],
@@ -387,7 +388,7 @@ function renderWatchlist(rows) {
       },
       { label: "Thema", key: "Thema" },
       {
-        label: "Score",
+        label: "Catalyst Score",
         render: (r, h) => `<span class="score">${r[idx(h, "Score")]}</span>`,
       },
       {
